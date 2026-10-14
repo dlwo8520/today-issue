@@ -1,0 +1,603 @@
+{
+  "schemaVersion": 1,
+  "mode": "demo",
+  "date": "2026-10-13",
+  "updatedAt": "2026-10-13T07:00:00+09:00",
+  "collectionStartedAt": "2026-10-13T07:00:00+09:00",
+  "windowStart": "2026-10-12T07:00:00+09:00",
+  "windowEnd": "2026-10-13T07:00:00+09:00",
+  "timezone": "Asia/Seoul",
+  "rankingMethod": "demo",
+  "warnings": [],
+  "issues": [
+    {
+      "title": "나루시, 심야 버스 노선 두 곳 시범 운영",
+      "oneLineSummary": "늦은 밤 이동을 돕는 새 노선을 한 달 동안 시험합니다.",
+      "titleSourceIds": [
+        "demo-1-1",
+        "demo-1-2",
+        "demo-1-3"
+      ],
+      "summarySourceIds": [
+        "demo-1-1",
+        "demo-1-2",
+        "demo-1-3"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "나루시는 밤늦게 귀가하는 주민을 위한 이동 수단을 검토해 왔습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-1-1",
+            "demo-1-2",
+            "demo-1-3"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "나루시는 심야 버스 두 노선을 한 달간 시범 운영한다고 발표했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-1-1",
+            "demo-1-2",
+            "demo-1-3"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "운행 결과를 살펴본 뒤 정식 운영 여부를 결정할 예정입니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-1-1",
+            "demo-1-2",
+            "demo-1-3"
+          ]
+        }
+      ],
+      "response": [
+        {
+          "id": "s-response",
+          "text": "나루시 교통과는 이용자 의견을 받아 노선과 시간을 조정하겠다고 밝혔습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-1-1",
+            "demo-1-2",
+            "demo-1-3"
+          ]
+        }
+      ],
+      "terminology": [
+        {
+          "term": "시범 운영",
+          "explanation": "정식으로 시작하기 전에 일정 기간 시험해 보는 것입니다."
+        }
+      ],
+      "id": "demo-issue-001",
+      "rank": 1,
+      "sources": [
+        {
+          "id": "demo-1-1",
+          "publisher": "가람일보 (가상)",
+          "title": "나루시, 심야 버스 노선 두 곳 시범 운영",
+          "url": "https://example.com/?demo-source=1-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-1-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "나루시, 심야 버스 노선 두 곳 시범 운영",
+          "url": "https://example.com/?demo-source=1-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        },
+        {
+          "id": "demo-1-3",
+          "publisher": "온빛신문 (가상)",
+          "title": "나루시, 심야 버스 노선 두 곳 시범 운영",
+          "url": "https://example.com/?demo-source=1-3",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-3",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    },
+    {
+      "title": "새봄은행, 기준 대출금리 유지",
+      "oneLineSummary": "가상의 은행이 이번 달 기준 대출금리를 바꾸지 않았습니다.",
+      "titleSourceIds": [
+        "demo-2-1",
+        "demo-2-2"
+      ],
+      "summarySourceIds": [
+        "demo-2-1",
+        "demo-2-2"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "새봄은행은 매달 대출에 적용할 기본 금리를 정합니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-2-1",
+            "demo-2-2"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "새봄은행은 이번 달 기준 대출금리를 지난달과 같은 수준으로 유지했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-2-1",
+            "demo-2-2"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "개별 고객의 실제 금리는 계약 조건에 따라 달라집니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-2-1",
+            "demo-2-2"
+          ]
+        }
+      ],
+      "response": [],
+      "terminology": [
+        {
+          "term": "기준 대출금리",
+          "explanation": "은행이 대출 이자를 정할 때 기본으로 삼는 금리입니다."
+        }
+      ],
+      "id": "demo-issue-002",
+      "rank": 2,
+      "sources": [
+        {
+          "id": "demo-2-1",
+          "publisher": "가람일보 (가상)",
+          "title": "새봄은행, 기준 대출금리 유지",
+          "url": "https://example.com/?demo-source=2-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-2-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "새봄은행, 기준 대출금리 유지",
+          "url": "https://example.com/?demo-source=2-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    },
+    {
+      "title": "온빛연구소, 재사용 배터리 실험 결과 공개",
+      "oneLineSummary": "사용한 배터리를 다른 용도로 쓸 수 있는지 시험했습니다.",
+      "titleSourceIds": [
+        "demo-3-1",
+        "demo-3-2",
+        "demo-3-3"
+      ],
+      "summarySourceIds": [
+        "demo-3-1",
+        "demo-3-2",
+        "demo-3-3"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "온빛연구소는 가상의 배터리 재사용 연구를 진행하고 있습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-3-1",
+            "demo-3-2",
+            "demo-3-3"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "연구소는 회수한 배터리의 상태를 점검하고 소형 저장 장치로 활용하는 실험을 했다고 발표했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-3-1",
+            "demo-3-2",
+            "demo-3-3"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "이번 결과는 실험 환경에서 나온 것으로 제품 출시를 뜻하지 않습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-3-1",
+            "demo-3-2",
+            "demo-3-3"
+          ]
+        }
+      ],
+      "response": [
+        {
+          "id": "s-response",
+          "text": "연구소는 안전성을 더 확인하기 위해 후속 시험이 필요하다고 설명했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-3-1",
+            "demo-3-2",
+            "demo-3-3"
+          ]
+        }
+      ],
+      "terminology": [
+        {
+          "term": "에너지 저장 장치",
+          "explanation": "전기를 모아 두었다가 필요할 때 꺼내 쓰는 장치입니다."
+        }
+      ],
+      "id": "demo-issue-003",
+      "rank": 3,
+      "sources": [
+        {
+          "id": "demo-3-1",
+          "publisher": "가람일보 (가상)",
+          "title": "온빛연구소, 재사용 배터리 실험 결과 공개",
+          "url": "https://example.com/?demo-source=3-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-3-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "온빛연구소, 재사용 배터리 실험 결과 공개",
+          "url": "https://example.com/?demo-source=3-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        },
+        {
+          "id": "demo-3-3",
+          "publisher": "온빛신문 (가상)",
+          "title": "온빛연구소, 재사용 배터리 실험 결과 공개",
+          "url": "https://example.com/?demo-source=3-3",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-3",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    },
+    {
+      "title": "누리마을 도서관, 주말 개방 시간 확대",
+      "oneLineSummary": "평일 방문이 어려운 주민을 위해 주말에 더 오래 문을 엽니다.",
+      "titleSourceIds": [
+        "demo-4-1",
+        "demo-4-2"
+      ],
+      "summarySourceIds": [
+        "demo-4-1",
+        "demo-4-2"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "누리마을 도서관은 주말 운영 시간에 관한 주민 의견을 모았습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-4-1",
+            "demo-4-2"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "도서관은 다음 달부터 주말 운영 시간을 늘린다고 안내했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-4-1",
+            "demo-4-2"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "자료실별 세부 이용 시간은 도서관 안내에서 확인할 수 있습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-4-1",
+            "demo-4-2"
+          ]
+        }
+      ],
+      "response": [],
+      "terminology": [],
+      "id": "demo-issue-004",
+      "rank": 4,
+      "sources": [
+        {
+          "id": "demo-4-1",
+          "publisher": "가람일보 (가상)",
+          "title": "누리마을 도서관, 주말 개방 시간 확대",
+          "url": "https://example.com/?demo-source=4-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-4-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "누리마을 도서관, 주말 개방 시간 확대",
+          "url": "https://example.com/?demo-source=4-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    },
+    {
+      "title": "가온학교, 일회용품 줄이기 실험 시작",
+      "oneLineSummary": "급식실에서 다회용 용기를 쓰는 작은 실험을 진행합니다.",
+      "titleSourceIds": [
+        "demo-5-1",
+        "demo-5-2",
+        "demo-5-3"
+      ],
+      "summarySourceIds": [
+        "demo-5-1",
+        "demo-5-2",
+        "demo-5-3"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "가온학교는 급식실에서 사용하는 일회용품을 줄이는 방법을 찾고 있습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-5-1",
+            "demo-5-2",
+            "demo-5-3"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "학교는 일부 급식 공간에 다회용 용기를 도입해 사용량과 세척 과정을 확인할 계획입니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-5-1",
+            "demo-5-2",
+            "demo-5-3"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "아직 실험 결과나 감소 효과는 확인되지 않았습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-5-1",
+            "demo-5-2",
+            "demo-5-3"
+          ]
+        }
+      ],
+      "response": [
+        {
+          "id": "s-response",
+          "text": "학교는 실험 이후 학생과 급식 담당자의 의견을 들을 예정이라고 밝혔습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-5-1",
+            "demo-5-2",
+            "demo-5-3"
+          ]
+        }
+      ],
+      "terminology": [
+        {
+          "term": "다회용",
+          "explanation": "한 번 쓰고 버리지 않고 여러 번 사용할 수 있다는 뜻입니다."
+        }
+      ],
+      "id": "demo-issue-005",
+      "rank": 5,
+      "sources": [
+        {
+          "id": "demo-5-1",
+          "publisher": "가람일보 (가상)",
+          "title": "가온학교, 일회용품 줄이기 실험 시작",
+          "url": "https://example.com/?demo-source=5-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-5-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "가온학교, 일회용품 줄이기 실험 시작",
+          "url": "https://example.com/?demo-source=5-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        },
+        {
+          "id": "demo-5-3",
+          "publisher": "온빛신문 (가상)",
+          "title": "가온학교, 일회용품 줄이기 실험 시작",
+          "url": "https://example.com/?demo-source=5-3",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-3",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    },
+    {
+      "title": "마루시, 보행로 정비 계획 발표",
+      "oneLineSummary": "시민이 걷는 길의 불편한 구간을 먼저 정비합니다.",
+      "titleSourceIds": [
+        "demo-6-1",
+        "demo-6-2"
+      ],
+      "summarySourceIds": [
+        "demo-6-1",
+        "demo-6-2"
+      ],
+      "background": [
+        {
+          "id": "s-background",
+          "text": "마루시는 보행로의 파손 구간을 조사해 왔습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-6-1",
+            "demo-6-2"
+          ]
+        }
+      ],
+      "currentSituation": [
+        {
+          "id": "s-current-0",
+          "text": "시는 조사 결과를 토대로 보행로 정비 계획을 발표했습니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-6-1",
+            "demo-6-2"
+          ]
+        },
+        {
+          "id": "s-current-1",
+          "text": "공사 일정과 대상 구간은 추가 안내할 예정입니다.",
+          "kind": "fact",
+          "attribution": null,
+          "sourceIds": [
+            "demo-6-1",
+            "demo-6-2"
+          ]
+        }
+      ],
+      "response": [],
+      "terminology": [
+        {
+          "term": "보행로",
+          "explanation": "차량보다 사람이 걸어 다니도록 마련한 길입니다."
+        }
+      ],
+      "id": "demo-issue-006",
+      "rank": 6,
+      "sources": [
+        {
+          "id": "demo-6-1",
+          "publisher": "가람일보 (가상)",
+          "title": "마루시, 보행로 정비 계획 발표",
+          "url": "https://example.com/?demo-source=6-1",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-1",
+          "method": "demo"
+        },
+        {
+          "id": "demo-6-2",
+          "publisher": "모아뉴스 (가상)",
+          "title": "마루시, 보행로 정비 계획 발표",
+          "url": "https://example.com/?demo-source=6-2",
+          "publishedAt": "2026-10-13T07:00:00+09:00",
+          "independenceKey": "fiction-2",
+          "method": "demo"
+        }
+      ],
+      "ranking": {
+        "method": "demo",
+        "score": null,
+        "reason": "화면 체험을 위해 편집한 가상 이슈입니다. 실제 보도량이나 사용자 관심도로 선정하지 않았습니다.",
+        "components": {},
+        "missingMetrics": [
+          "조회수",
+          "댓글수",
+          "인기 순위"
+        ]
+      }
+    }
+  ]
+}

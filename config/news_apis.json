@@ -1,0 +1,42 @@
+{
+  "usage_scope": "local_private",
+  "public_reuse_granted": false,
+  "permission_reference": null,
+  "account_plan": {"gnews": "unknown", "newsdata": "unknown"},
+  "cache_ttl_hours": 6,
+  "max_news_requests": 26,
+  "max_gnews_requests": 20,
+  "max_newsdata_requests": 6,
+  "max_related_queries": 6,
+  "gnews_discovery_windows": 14,
+  "gnews_extra_page_windows": 6,
+  "max_gnews_related_queries": 0,
+  "articles_per_request": 10,
+  "news_retries": 0,
+  "timeout_seconds": 15,
+  "request_interval_seconds": {"gnews": 1.25, "newsdata": 0.25},
+  "max_response_bytes": 2097152,
+  "max_gpt_issues": 6,
+  "max_gpt_requests": 18,
+  "min_excerpt_chars": 50,
+  "require_gnews_candidate": false,
+  "selection_strategy": "latest",
+  "fetch_missing_images": true,
+  "query_keyword_limit": 2,
+  "max_excerpt_chars": 4000,
+  "ranking_weights": {"headline": 0.0, "engagement": 0.0, "diversity": 0.40, "independence": 0.40, "recency": 0.10, "sufficiency": 0.10},
+  "publisher_aliases": {"Yonhap": "연합뉴스", "Yonhap News Agency": "연합뉴스", "연합 뉴스": "연합뉴스", "Newsis": "뉴시스", "NEWS1": "뉴스1"},
+  "query_terms": ["기준금리", "반도체", "노동", "무역", "관세", "대출", "배터리", "선거", "예산", "수출", "수입", "재판", "정책", "발사", "태풍", "수사"],
+  "quoted_event_terms": ["휴전", "관세", "기준금리", "협정", "법안", "합병", "파업", "발사", "제재"],
+  "specific_event_anchors": ["북한군포로"],
+  "context_entities": ["트럼프", "러시아", "우크라이나", "북한", "젤렌스키", "푸틴", "한국은행", "국회", "정부", "삼성전자", "사우디", "후티", "이란", "호르무즈", "미국", "중국", "이스라엘"],
+  "excluded_title_patterns": ["오행별.*행운", "오늘의.*운세", "^KBS\\s*뉴스$"],
+  "pricing": {
+    "checked_at": "2026-10-13",
+    "source": "https://developers.openai.com/api/docs/models/gpt-4o-mini",
+    "models": {
+      "gpt-4o-mini": {"input_per_million_usd": 0.15, "cached_input_per_million_usd": 0.075, "output_per_million_usd": 0.60, "source": "https://developers.openai.com/api/docs/models/gpt-4o-mini"},
+      "gpt-5.4-mini": {"input_per_million_usd": 0.75, "cached_input_per_million_usd": 0.075, "output_per_million_usd": 4.50, "source": "https://developers.openai.com/api/docs/models/gpt-5.4-mini"}
+    }
+  }
+}

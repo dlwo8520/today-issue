@@ -1,0 +1,413 @@
+{
+  "$defs": {
+    "Issue": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 90,
+          "minLength": 3,
+          "title": "Title",
+          "type": "string"
+        },
+        "oneLineSummary": {
+          "maxLength": 180,
+          "minLength": 3,
+          "title": "Onelinesummary",
+          "type": "string"
+        },
+        "titleSourceIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Titlesourceids",
+          "type": "array"
+        },
+        "summarySourceIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Summarysourceids",
+          "type": "array"
+        },
+        "background": {
+          "items": {
+            "$ref": "#/$defs/Statement"
+          },
+          "title": "Background",
+          "type": "array"
+        },
+        "currentSituation": {
+          "items": {
+            "$ref": "#/$defs/Statement"
+          },
+          "minItems": 1,
+          "title": "Currentsituation",
+          "type": "array"
+        },
+        "response": {
+          "items": {
+            "$ref": "#/$defs/Statement"
+          },
+          "title": "Response",
+          "type": "array"
+        },
+        "terminology": {
+          "items": {
+            "$ref": "#/$defs/Term"
+          },
+          "title": "Terminology",
+          "type": "array"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "rank": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "minItems": 1,
+          "title": "Sources",
+          "type": "array"
+        },
+        "ranking": {
+          "$ref": "#/$defs/Ranking"
+        }
+      },
+      "required": [
+        "title",
+        "oneLineSummary",
+        "titleSourceIds",
+        "summarySourceIds",
+        "background",
+        "currentSituation",
+        "response",
+        "terminology",
+        "id",
+        "rank",
+        "sources",
+        "ranking"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "Ranking": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "enum": [
+            "demo",
+            "coverage_recency",
+            "engagement",
+            "headline_coverage"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Score"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "components": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Components",
+          "type": "object"
+        },
+        "missingMetrics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missingmetrics",
+          "type": "array"
+        }
+      },
+      "required": [
+        "method",
+        "score",
+        "reason",
+        "components",
+        "missingMetrics"
+      ],
+      "title": "Ranking",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "publisher": {
+          "minLength": 1,
+          "title": "Publisher",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "publishedAt": {
+          "format": "date-time",
+          "title": "Publishedat",
+          "type": "string"
+        },
+        "independenceKey": {
+          "minLength": 1,
+          "title": "Independencekey",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "providers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Providers",
+          "type": "array"
+        },
+        "publisherKey": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisherkey"
+        },
+        "imageUrl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Imageurl"
+        }
+      },
+      "required": [
+        "id",
+        "publisher",
+        "title",
+        "url",
+        "publishedAt",
+        "independenceKey",
+        "method"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "Statement": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 450,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "claim"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "attribution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Attribution"
+        },
+        "sourceIds": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Sourceids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "kind",
+        "attribution",
+        "sourceIds"
+      ],
+      "title": "Statement",
+      "type": "object"
+    },
+    "Term": {
+      "additionalProperties": false,
+      "properties": {
+        "term": {
+          "minLength": 1,
+          "title": "Term",
+          "type": "string"
+        },
+        "explanation": {
+          "maxLength": 250,
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "term",
+        "explanation"
+      ],
+      "title": "Term",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1,
+      "default": 1,
+      "title": "Schemaversion",
+      "type": "integer"
+    },
+    "mode": {
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "date": {
+      "title": "Date",
+      "type": "string"
+    },
+    "updatedAt": {
+      "format": "date-time",
+      "title": "Updatedat",
+      "type": "string"
+    },
+    "collectionStartedAt": {
+      "format": "date-time",
+      "title": "Collectionstartedat",
+      "type": "string"
+    },
+    "windowStart": {
+      "format": "date-time",
+      "title": "Windowstart",
+      "type": "string"
+    },
+    "windowEnd": {
+      "format": "date-time",
+      "title": "Windowend",
+      "type": "string"
+    },
+    "timezone": {
+      "const": "Asia/Seoul",
+      "default": "Asia/Seoul",
+      "title": "Timezone",
+      "type": "string"
+    },
+    "rankingMethod": {
+      "enum": [
+        "demo",
+        "coverage_recency",
+        "engagement",
+        "mixed",
+        "headline_coverage"
+      ],
+      "title": "Rankingmethod",
+      "type": "string"
+    },
+    "publicationScope": {
+      "default": "public",
+      "enum": [
+        "public",
+        "local_private"
+      ],
+      "title": "Publicationscope",
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/Issue"
+      },
+      "maxItems": 6,
+      "title": "Issues",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode",
+    "date",
+    "updatedAt",
+    "collectionStartedAt",
+    "windowStart",
+    "windowEnd",
+    "rankingMethod",
+    "warnings",
+    "issues"
+  ],
+  "title": "Edition",
+  "type": "object"
+}

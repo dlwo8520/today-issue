@@ -1,0 +1,98 @@
+[
+  {
+    "id": "donga",
+    "publisher": "동아일보",
+    "url": "https://rss.donga.com/total.xml",
+    "observedAt": "2026-10-13T12:02:45.243549+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 50,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "hani",
+    "publisher": "한겨레",
+    "url": "https://www.hani.co.kr/rss/",
+    "observedAt": "2026-10-13T12:02:45.244330+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 30,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "khan",
+    "publisher": "경향신문",
+    "url": "https://www.khan.co.kr/rss/rssdata/total_news.xml",
+    "observedAt": "2026-10-13T12:02:45.244739+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 50,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "yna",
+    "publisher": "연합뉴스",
+    "url": "https://www.yna.co.kr/rss/news.xml",
+    "observedAt": "2026-10-13T12:02:45.245044+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 120,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "mk",
+    "publisher": "매일경제",
+    "url": "https://www.mk.co.kr/rss/30000001/",
+    "observedAt": "2026-10-13T12:02:45.475390+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 50,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "hankyung",
+    "publisher": "한국경제",
+    "url": "https://www.hankyung.com/feed/all-news",
+    "observedAt": "2026-10-13T12:02:45.492023+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": 50,
+    "hasViewCounts": false,
+    "hasCommentCounts": false,
+    "status": "accessible"
+  },
+  {
+    "id": "seoul",
+    "publisher": "서울신문",
+    "url": "https://www.seoul.co.kr/xml/rss/rss.xml",
+    "observedAt": "2026-10-13T12:02:45.516479+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": null,
+    "hasViewCounts": null,
+    "hasCommentCounts": null,
+    "status": "http_404"
+  },
+  {
+    "id": "ytn",
+    "publisher": "YTN",
+    "url": "https://www.ytn.co.kr/_rss/all.xml",
+    "observedAt": "2026-10-13T12:02:45.631098+09:00",
+    "permission": "not_granted",
+    "enabled": false,
+    "entryCount": null,
+    "hasViewCounts": null,
+    "hasCommentCounts": null,
+    "status": "http_404"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "hours": 336,
+  "max_issues": 6,
+  "max_candidates": 12,
+  "max_articles_per_source": 120,
+  "max_articles_per_issue": 8,
+  "min_independent_sources": 2,
+  "similarity_threshold": 0.40,
+  "max_cluster_hours": 336,
+  "timeout_seconds": 15,
+  "retries": 2,
+  "max_feed_bytes": 2097152,
+  "weights": {"engagement": 0.35, "diversity": 0.25, "independence": 0.20, "recency": 0.15, "sufficiency": 0.05},
+  "entity_aliases": {"한은": "한국은행", "기준금리 유지": "기준금리 동결"},
+  "entity_anchors": ["한국은행", "새봄은행", "국회", "대법원", "헌법재판소", "삼성전자", "온빛연구소", "나루시", "마루시", "가온학교"],
+  "opposite_actions": [["인상", "인하"], ["동결", "인하"], ["동결", "인상"], ["승인", "거부"], ["가결", "부결"], ["유죄", "무죄"]]
+}

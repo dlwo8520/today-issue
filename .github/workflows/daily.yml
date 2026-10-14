@@ -1,0 +1,147 @@
+name: Daily edition
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # 22:00 UTC on the previous day = 07:00 Asia/Seoul. Execution can be delayed.
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Publish DEMO or permission-approved Live data'
+        required: true
+        default: demo
+        type: choice
+        options: [demo, live]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: today-issue-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    # Source upload runs CI; scheduled publishing is explicitly opt-in.
+    if: github.event_name != 'schedule' || vars.ENABLE_PAGES == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: npm ci
+      - run: pip install -r requirements.lock.txt
+      - run: python -m ruff check pipeline scripts tests/python
+      - run: python -m pytest -q
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_DATA_MODE: demo
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          VITE_DATA_MODE: demo
+
+  prepare:
+    if: vars.ENABLE_PAGES == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pages: read
+    env:
+      TARGET_MODE: ${{ inputs.mode || vars.NEWS_MODE || 'demo' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: pip install -r requirements.lock.txt
+      - name: Download prior news state from this workflow on main
+        if: env.TARGET_MODE == 'live'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            const artifacts = await github.paginate(github.rest.actions.listArtifactsForRepo, { ...context.repo, per_page: 100 });
+            for (const artifact of artifacts.filter(a => a.name === 'news-state' && !a.expired)) {
+              const run = await github.rest.actions.getWorkflowRun({ ...context.repo, run_id: artifact.workflow_run.id });
+              if (run.data.head_branch !== 'main' || run.data.path !== '.github/workflows/daily.yml' || run.data.event === 'pull_request') continue;
+              const archive = await github.rest.actions.downloadArtifact({ ...context.repo, artifact_id: artifact.id, archive_format: 'zip' });
+              fs.mkdirSync('data', { recursive: true });
+              fs.writeFileSync('data/prior-state.zip', Buffer.from(archive.data));
+              core.info('Downloaded prior news-state artifact');
+              break;
+            }
+      - name: Restore validated Live edition
+        if: env.TARGET_MODE == 'live'
+        run: python scripts/restore_state.py data/prior-state.zip
+      - name: Generate new verified Live edition
+        id: update
+        if: env.TARGET_MODE == 'live'
+        continue-on-error: true
+        run: python -m pipeline.run --mode live
+        env:
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+      - name: Check publication permission before uploading data
+        id: publication
+        if: always() && env.TARGET_MODE == 'live'
+        run: python scripts/validate_public.py --mode live
+      - name: Retain news state even when update fails
+        if: always() && env.TARGET_MODE == 'live' && steps.publication.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-state
+          path: |
+            public/data/latest.json
+            public/data/status.json
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Verify data before build (Live never becomes DEMO)
+        run: python scripts/validate_public.py --mode "$TARGET_MODE"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Build selected edition
+        run: npm run build
+        env:
+          VITE_DATA_MODE: ${{ env.TARGET_MODE }}
+          VITE_BASE_PATH: './'
+      - name: Report failed update while preserving the prior edition
+        if: steps.update.outcome == 'failure'
+        run: echo '::warning::Update failed. Publishing prior verified edition with explicit stale/error status.'
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy static artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
