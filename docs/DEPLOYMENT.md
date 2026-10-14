@@ -1,5 +1,7 @@
 # 소스 전달·배포·운영
 
+> 2026-10-14에 기본 배포 대상을 Cloudflare Pages로 전환했습니다. 현재 실행 기준과 Secrets·Variables·공개 빌드는 [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)를 따릅니다. 아래 GitHub Pages·ENABLE_PAGES 설명은 초기 1차 소스 업로드 당시의 이력입니다.
+
 현재 실제 API와 로컬 Live는 검증을 완료했습니다. 1차 GitHub 전달 대상은 키와 실제 뉴스 자료를 제외한 소스·DEMO·테스트·문서입니다. 공개 Live 서비스와 원격 예약·복구는 별도 운영 단계입니다. [전체 기록](PHASE_1_REPORT.md)
 
 ## 소스 업로드와 CI

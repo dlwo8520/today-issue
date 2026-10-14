@@ -1,4 +1,4 @@
-name: Daily edition
+name: Cloudflare edition
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Publish DEMO or permission-approved Live data'
+        description: 'Deploy DEMO or permission-approved Live to Cloudflare Pages'
         required: true
         default: demo
         type: choice
@@ -26,8 +26,8 @@ concurrency:
 
 jobs:
   checks:
-    # Source upload runs CI; scheduled publishing is explicitly opt-in.
-    if: github.event_name != 'schedule' || vars.ENABLE_PAGES == 'true'
+    # Source changes run CI; daily public Live updates are explicitly opt-in.
+    if: github.event_name != 'schedule' || (vars.ENABLE_CLOUDFLARE == 'true' && vars.NEWS_MODE == 'live')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,24 +44,25 @@ jobs:
       - run: python -m ruff check pipeline scripts tests/python
       - run: python -m pytest -q
       - run: npm test
-      - run: npm run build
-        env:
-          VITE_DATA_MODE: demo
+      - run: python scripts/build_public.py --mode demo
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
         env:
           VITE_DATA_MODE: demo
 
   prepare:
-    if: vars.ENABLE_PAGES == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'workflow_dispatch' || vars.ENABLE_CLOUDFLARE == 'true') && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: checks
     runs-on: ubuntu-latest
+    outputs:
+      production_url: ${{ steps.project.outputs.production_url }}
+      data_mode: ${{ env.TARGET_MODE }}
     permissions:
       contents: read
       actions: read
-      pages: read
     env:
       TARGET_MODE: ${{ inputs.mode || vars.NEWS_MODE || 'demo' }}
+      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME || 'today-issue-dlwo8520' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -69,6 +70,15 @@ jobs:
           python-version: '3.13'
           cache: pip
       - run: pip install -r requirements.lock.txt
+      - name: Check Live publication permission before spending API budget
+        if: env.TARGET_MODE == 'live'
+        run: python scripts/build_public.py --check-live-permission
+      - name: Validate Cloudflare account and create Direct Upload project if needed
+        id: project
+        run: python scripts/ensure_cloudflare_project.py
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Download prior news state from this workflow on main
         if: env.TARGET_MODE == 'live'
         uses: actions/github-script@v7
@@ -112,36 +122,68 @@ jobs:
             public/data/status.json
           retention-days: 90
           if-no-files-found: warn
-      - name: Verify data before build (Live never becomes DEMO)
-        run: python scripts/validate_public.py --mode "$TARGET_MODE"
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
       - run: npm ci
       - name: Build selected edition
-        run: npm run build
-        env:
-          VITE_DATA_MODE: ${{ env.TARGET_MODE }}
-          VITE_BASE_PATH: './'
+        run: python scripts/build_public.py --mode "$TARGET_MODE"
       - name: Report failed update while preserving the prior edition
         if: steps.update.outcome == 'failure'
         run: echo '::warning::Update failed. Publishing prior verified edition with explicit stale/error status.'
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - name: Retain the checked static deployment
+        uses: actions/upload-artifact@v4
         with:
-          path: dist
+          name: cloudflare-site
+          path: .tools/public-deploy/dist
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
 
   deploy:
     needs: prepare
     runs-on: ubuntu-latest
     permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: read
+      deployments: write
     steps:
-      - name: Deploy static artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: cloudflare-site
+          path: site
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Deploy checked files to Cloudflare Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME || 'today-issue-dlwo8520' }} --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify the deployed page and edition over HTTPS
+        uses: actions/github-script@v7
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
+          DATA_MODE: ${{ needs.prepare.outputs.data_mode }}
+        with:
+          script: |
+            const url = new URL(process.env.DEPLOYMENT_URL);
+            if (url.protocol !== 'https:' || !url.hostname.endsWith('.pages.dev') || url.username || url.password) throw new Error('Cloudflare did not return a valid deployment URL');
+            const page = await fetch(url, { signal: AbortSignal.timeout(20000) });
+            if (!page.ok || !(await page.text()).includes('<div id="root">')) throw new Error('Deployed page is unavailable');
+            const mode = process.env.DATA_MODE;
+            const filename = mode === 'demo' ? 'demo.json' : 'latest.json';
+            const response = await fetch(new URL(`data/${filename}`, url), { signal: AbortSignal.timeout(20000) });
+            if (!response.ok) throw new Error('Deployed edition is unavailable');
+            const edition = await response.json();
+            if (edition.mode !== mode || edition.publicationScope !== 'public' || !Array.isArray(edition.issues) || edition.issues.length > 6) throw new Error('Deployed edition does not match the public mode');
+            core.info(`Verified public ${mode} edition with ${edition.issues.length} issues`);
+      - name: Record published address
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
+          PRODUCTION_URL: ${{ needs.prepare.outputs.production_url }}
+        run: |
+          printf '### Cloudflare Pages\n\n- Deployment: %s\n- Production: %s\n' "$DEPLOYMENT_URL" "$PRODUCTION_URL" >> "$GITHUB_STEP_SUMMARY"

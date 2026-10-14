@@ -15,7 +15,7 @@
 | 뉴스 | GNews 날짜 구간·페이지 조회 + NewsData 최신 관련 기사 + 기간 내 로컬 수집 이력 |
 | 선정 | 복수 언론사·독립 원출처 조건 → 최신 발행 순 → GPT 3단계·코드 검증 |
 | 최신 로컬 결과 | 291건 스냅샷 → 285건 분석 → 270그룹 → 적격 후보 8개 → 검증 통과 6개 |
-| 검증 | Python 92 · 프론트 20 · DEMO 브라우저 5 · 실제 Live 브라우저 1 = 118개 |
+| 검증 | 현재 Python 100 · 프론트 20 · 공개 DEMO 브라우저 5 통과; 실제 Live 브라우저 1은 1차 단계에서 확인 |
 | 뉴스 이용 범위 | local_private, 실제 계정 플랜 unknown, 공개 재사용 허가 미확인 |
 | GitHub 전달 범위 | 소스·가상 DEMO·테스트·문서; 실제 키와 비공개 Live 자료 제외 |
 
@@ -90,7 +90,9 @@ npm run test:e2e -- tests/browser/site.spec.ts
 
 Live 화면 결과는 public/data/latest.json과 status.json이며 Git에서 제외합니다. 원문·캐시·진단은 data/raw·cache·debug·reports에 저장합니다. 실패 시 이전 정상 JSON을 보존하고 Live를 DEMO로 대체하지 않습니다. 실제 원문 사진 URL만 연결하며 사진 파일을 저장소에 복사하지 않습니다.
 
-GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. Pages·예약 발행은 저장소 Variable ENABLE_PAGES=true를 설정해야 활성화됩니다. 예약은 0 22 * * * UTC로 KST 오전 7시입니다. 공개 운영의 Secret은 GNEWS_API_KEY·NEWSDATA_API_KEY·OPENAI_API_KEY, 모델 Variable은 OPENAI_MODEL입니다. 현재 private Live를 공개 artifact로 올리는 동작은 검사에서 거부합니다. [배포 안내](docs/DEPLOYMENT.md)
+GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. 현재 배포 대상은 **Cloudflare Pages**입니다. Cloudflare 계정과 Actions Secrets 두 개를 연결한 뒤 수동 demo 배포로 시작합니다. ENABLE_CLOUDFLARE=true는 main push 배포를 활성화하고 NEWS_MODE=live일 때 KST 오전 7시 예약도 활성화합니다. 공개 Live는 뉴스·사진 이용 근거와 API Secrets를 별도로 확인해야 합니다. [Cloudflare 실행 안내](docs/CLOUDFLARE_SETUP.md)
+
+공개 빌드는 python scripts/build_public.py --mode demo로 .tools/public-deploy/dist에 생성합니다. 로컬 private Live 파일을 포함하지 않도록 선택한 데이터만 별도 staging에서 빌드합니다. 기존 private dist와 .env는 유지합니다.
 
 현재 로컬 dist에는 비공개 Live JSON이 있으므로 외부 업로드하지 않습니다. 전달 ZIP도 현재 private 결과·빌드·원문·키를 제외한 소스 패키지입니다.
 
@@ -101,6 +103,8 @@ GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. Pa
 - [API_LIVE_INTEGRATION](docs/API_LIVE_INTEGRATION.md), [SOURCES](docs/SOURCES.md): 수집·출처·권한
 - [UI_REVISION](docs/UI_REVISION.md): 최근 2주·사진·상세 목록 변경
 - [VALIDATION](docs/VALIDATION.md), [DEPLOYMENT](docs/DEPLOYMENT.md): 검증과 운영
+- [HOSTING_OPTIONS](docs/HOSTING_OPTIONS.md): 공개 도메인 배포 후보·비용·장단점 비교
+- [CLOUDFLARE_SETUP](docs/CLOUDFLARE_SETUP.md): 실제 Cloudflare 배포·계정 연결·일일 갱신 설정
 - [LIVE_LAUNCH_CHECKLIST](docs/LIVE_LAUNCH_CHECKLIST.md): 공개 운영 준비
 - [WEEKLY_UPDATE](docs/WEEKLY_UPDATE.md), [FINAL_REPORT](docs/FINAL_REPORT.md): 7일 단계와 최초 DEMO 단계의 이력
 

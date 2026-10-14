@@ -2,6 +2,8 @@
 
 작성일: 2026-10-13 · 기준 시간대: Asia/Seoul
 
+> 후속 작업: 2026-10-14에 1차 GitHub CI 성공을 확인하고 Cloudflare Pages 배포 workflow와 private 자료를 분리하는 공개 빌드를 추가했습니다. 새 Python 검사는 100개 통과했습니다. 실제 Cloudflare 계정·배포는 아직 연결 전이며 현재 절차는 [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)를 확인하세요. 아래 내용은 1차 개발 기준 기록입니다.
+
 **현재까지 React 뉴스 화면, GNews·NewsData·OpenAI 실제 연동, 최근 2주 복수 출처 이슈의 최신순 최대 6개 선정, 원문 사진과 상세 이동 목록을 구현하고 로컬 Live 검증을 완료했습니다.** 이 문서는 최초 기획부터 현재 수정 사항까지의 전체 기록입니다. 1차 GitHub 전달 범위는 소스·설정 예시·DEMO·테스트·문서입니다. 실제 뉴스와 사진이 포함된 비공개 Live 결과의 공개 서비스 전환은 별도 운영 단계입니다.
 
 ## 1. 서비스 목적과 범위

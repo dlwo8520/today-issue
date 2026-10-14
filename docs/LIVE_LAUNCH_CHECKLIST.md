@@ -1,5 +1,7 @@
 # 오늘의 잇슈 — 실제 운영 준비 체크리스트
 
+> 현재 배포 대상은 Cloudflare Pages이며 ENABLE_CLOUDFLARE를 사용합니다. [현재 실행·계정 연결 안내](CLOUDFLARE_SETUP.md). 아래의 GitHub Pages·ENABLE_PAGES 항목은 초기 계획입니다.
+
 기준일: 2026-10-13 KST. 현재 최근 2주·최신순 최대 6개, 첫 원문 사진과 상세 이동 목록을 구현하고 실제 API·로컬 Live 검증을 완료했습니다. 이 체크리스트는 공개 운영에 필요한 준비와 남은 검증을 관리합니다. [전체 1차 기록](PHASE_1_REPORT.md)
 
 ## 완료한 개발과 로컬 확인
