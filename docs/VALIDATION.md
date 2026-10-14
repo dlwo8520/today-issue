@@ -1,6 +1,6 @@
 # 실행 검증 기록
 
-> 2026-10-14 Cloudflare 공개 빌드 변경 검증: Python 100개·프론트 20개·공개 DEMO 프로덕션 브라우저 5개 통과, TypeScript·빌드·Ruff 성공. 1차 원격 GitHub CI도 성공했습니다. 실제 Live 브라우저 1개는 아래 1차 단계의 검증이며 이번 공개 빌드 작업에서 다시 실행하지 않았습니다. [현재 배포 안내](CLOUDFLARE_SETUP.md).
+> 2026-10-14 Cloudflare 공개 빌드 변경 검증: Python 100개·프론트 20개·공개 DEMO 프로덕션 브라우저 5개 통과, TypeScript·빌드·Ruff 성공. [원격 CI](https://github.com/dlwo8520/today-issue/actions/runs/38499480332)도 성공했습니다. 직접 Cloudflare 배포 후 [실제 공개 주소](https://today-issue-dlwo8520.pages.dev)에서도 브라우저 5개를 통과했습니다. 반복 실행은 고유 검사 수에 더하지 않습니다. 실제 Live 브라우저 1개는 아래 1차 단계의 검증이며 이번 공개 빌드 작업에서 다시 실행하지 않았습니다. [현재 배포 안내](CLOUDFLARE_SETUP.md).
 
 최종 기능 검증일: 2026-10-13 KST. Windows, Python 3.13.9, Node v24.21.0, Google Chrome headless. 현재 기준은 최근 2주·최신순 최대 6개입니다. [전체 1차 개발 정리](PHASE_1_REPORT.md)
 

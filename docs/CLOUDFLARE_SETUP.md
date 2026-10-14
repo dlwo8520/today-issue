@@ -2,7 +2,11 @@
 
 작성일: 2026-10-14 KST
 
-Cloudflare Pages + GitHub Actions의 코드와 공개 빌드를 준비했습니다. 현재 Cloudflare 계정이 없어 실제 프로젝트 생성·배포·접속 주소 확인은 아직 수행하지 않았습니다. 회원가입과 배포 자격 증명 연결 뒤 실행할 수 있습니다.
+**공개 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)**
+
+2026-10-14 사용자가 만든 Cloudflare 계정에 Direct Upload 프로젝트를 생성하고 가상 이슈 6개의 DEMO를 직접 배포했습니다. 실제 Production 주소의 HTTPS와 Playwright 검사 5개를 확인했습니다. 배포 ID는 `9d94910c-c4ec-4bbd-b117-e5a4f868b2d4`입니다. 실제 뉴스와 사진은 아직 공개하지 않았습니다.
+
+사용자는 GitHub Actions Secrets를 아직 등록하지 않았다고 확인했습니다. 첫 배포는 Actions가 아닌 직접 배포이며, 자동 배포와 일일 갱신은 아직 활성화하지 않았습니다. 받은 토큰은 배포 프로세스의 환경변수로만 사용했고 소스·문서·전달 ZIP에 저장하지 않았습니다.
 
 ## 1. 이번에 구현한 것
 
@@ -14,19 +18,25 @@ Cloudflare Pages + GitHub Actions의 코드와 공개 빌드를 준비했습니�
 - 생성 JSON은 `Cache-Control: no-store`, 해시가 붙은 빌드 asset은 장기 캐시로 제공합니다.
 - 실제 URL은 성공한 Actions 실행의 Deployment와 Production 항목에 기록합니다.
 
-기본 프로젝트 이름은 `today-issue-dlwo8520`, production branch는 `main`입니다. 이 이름이 사용 가능한지는 계정 연결 후 API에서 확인합니다. `https://today-issue-dlwo8520.pages.dev`는 성공 시 예상 주소 형식이며 현재 열린 사이트 주소가 아닙니다.
+실제 프로젝트 이름은 `today-issue-dlwo8520`, production branch는 `main`입니다. 위 주소는 현재 접속 가능한 Production 주소입니다. 별도 도메인 구매나 DNS 변경은 하지 않았습니다.
 
 ## 2. 처음 한 번 필요한 사용자 설정
 
 ### 무료 Cloudflare 계정
 
-[Cloudflare 가입](https://dash.cloudflare.com/sign-up)에서 계정을 만들고 이메일 확인을 완료합니다. 기본 `pages.dev` 주소를 사용하면 도메인을 먼저 구매할 필요가 없습니다.
+Cloudflare 가입과 첫 배포 연결을 완료했습니다. 새 환경에서 시작하는 경우 [Cloudflare 가입](https://dash.cloudflare.com/sign-up)을 사용합니다. 현재 `pages.dev` 주소는 도메인을 먼저 구매할 필요 없이 공유할 수 있습니다.
 
 ### GitHub Actions Secrets 두 개
 
 Cloudflare 계정의 Account ID와 API Token을 다음 저장소에 등록합니다. 토큰을 채팅이나 소스 파일에 붙여넣지 않습니다.
 
 [GitHub Actions Secrets 설정](https://github.com/dlwo8520/today-issue/settings/secrets/actions)
+
+1. **New repository secret**을 누릅니다.
+2. 아래 표의 이름을 **Name**, 해당 값을 **Secret**에 넣고 **Add secret**을 누릅니다.
+3. 두 이름이 목록에 표시되는지 확인합니다. 이 두 값은 이미 사용자가 보유한 Cloudflare 값이며 토큰을 다시 발급할 필요는 없습니다.
+
+현재 연결된 GitHub 도구는 Secrets 쓰기를 지원하지 않아 이 등록은 계정 소유자가 해야 합니다. 토큰은 이 문서에 적지 않습니다.
 
 | Secret 이름 | 넣을 값 |
 |---|---|
@@ -37,7 +47,9 @@ Cloudflare에서 API Token을 만들 때 권한은 `Account → Cloudflare Pages
 
 프로젝트는 workflow가 API로 처음 생성하므로 직접 Git 연동 프로젝트를 만들 필요가 없습니다. 이미 같은 이름의 Git 연동 프로젝트가 있으면 별도 이름을 선택합니다.
 
-## 3. 첫 공개 실행 — DEMO
+## 3. GitHub Actions 배포 확인 — DEMO
+
+현재 사이트는 이미 공개되어 있습니다. Secrets 등록 후 아래 절차로 자동 배포 경로를 확인합니다.
 
 1. 저장소 [Actions](https://github.com/dlwo8520/today-issue/actions)를 엽니다.
 2. **Cloudflare edition**을 선택합니다.
@@ -61,7 +73,9 @@ Cloudflare에서 API Token을 만들 때 권한은 `Account → Cloudflare Pages
 
 ## 4. 실제 뉴스와 일일 자동 갱신
 
-현재 실제 계정 플랜은 `unknown`이고 뉴스 이용 범위는 `local_private`, `public_reuse_granted=false`입니다. 실제 뉴스 요약·제공 텍스트의 AI 처리·보관·출처 메타데이터·원문 사진 공개 사용 범위를 확인하고 기록합니다. 공개 서비스 요청이나 설정 변경 자체가 공급자의 허가를 대신하지는 않습니다.
+사용자가 GNews·NewsData 모두 무료 플랜이라고 확인하여 설정의 `account_plan`을 `free`로 기록했습니다. 대시보드나 계약을 직접 조회한 확인과는 구분합니다. 현재 광고·결제 기능은 없습니다. 무료 플랜의 공개 이용 조건과 사진 권한은 [NEWS_USAGE_REVIEW.md](NEWS_USAGE_REVIEW.md)를 확인합니다.
+
+뉴스 이용 범위는 아직 `local_private`, `public_reuse_granted=false`입니다. 첫 원문 사진의 공개 사용 권한 확인 또는 사진 없는 공개판 선택이 남아 있어 기존 비공개 결과의 플래그만 바꾸어 업로드하지 않습니다.
 
 확인 뒤 진행할 항목:
 
@@ -105,7 +119,10 @@ python -m http.server 4180 --bind 127.0.0.1 --directory .tools/public-deploy/dis
 - 프론트 20개 통과, TypeScript·공개 DEMO 프로덕션 빌드 성공.
 - 공개 빌드 정적 서버의 PC·태블릿·모바일·키보드·오류 복구 Playwright 5개 통과.
 - DEMO 결과의 private latest/status·원자료·사진 파일 제외와 원본 보존 확인.
-- 기존 1차 GitHub CI는 실제 원격 성공을 확인했습니다.
-- Cloudflare 실제 자격 증명·프로젝트 생성·배포 URL·HTTPS·사용자 도메인·일일 운영은 계정 연결 뒤 검증합니다.
+- [원격 GitHub CI](https://github.com/dlwo8520/today-issue/actions/runs/38499480332)는 Python 100개·프론트 20개·DEMO 브라우저 5개를 통과했습니다. 자동 배포를 켜지 않아 prepare/deploy는 건너뛰었습니다.
+- Cloudflare 프로젝트 생성·Production 배포 성공과 실제 HTTPS 주소를 확인했습니다.
+- 실제 Production 주소에서도 PC·태블릿·모바일·상세 새로고침·키보드·오류 복구 Playwright 5개를 통과했습니다. 반복 실행을 고유 검사 개수에 더하지 않습니다.
+- 공개 `/data/demo.json`은 `mode=demo`, `publicationScope=public`, 이슈 6개입니다. `/data/latest.json`에는 비공개 Live JSON이 없습니다.
+- GitHub Secrets 등록·Actions 배포·실제 뉴스 공개·일일 갱신·사용자 도메인은 아직 완료하지 않았습니다.
 
 관련 문서: [배포 후보](HOSTING_OPTIONS.md), [전체 1차 개발 정리](PHASE_1_REPORT.md), [공개 운영 체크리스트](LIVE_LAUNCH_CHECKLIST.md).

@@ -2,7 +2,7 @@
   "usage_scope": "local_private",
   "public_reuse_granted": false,
   "permission_reference": null,
-  "account_plan": {"gnews": "unknown", "newsdata": "unknown"},
+  "account_plan": {"gnews": "free", "newsdata": "free"},
   "cache_ttl_hours": 6,
   "max_news_requests": 26,
   "max_gnews_requests": 20,

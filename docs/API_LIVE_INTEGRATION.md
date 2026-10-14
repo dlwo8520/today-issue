@@ -8,7 +8,7 @@ GNews top-headlines는 ko/kr, category general, max 10으로 14개 날짜 구간
 
 NewsData latest는 ko/kr, size 10, 관련 q로 최대 6회 보강합니다. latest 자체의 범위는 최근 48시간입니다. 2주 전체나 권한을 확인하지 않은 유료 archive 기능을 제공한다고 가정하지 않습니다. 로컬 api-history.json에는 실제 확보한 자료만 보관하고 매 실행 시 336시간 밖의 기사를 제외합니다.
 
-공급자의 요청당 제한과 상한 때문에 기간 내 모든 기사를 수집하는 구조는 아닙니다. 현재 실제 계정 플랜은 unknown입니다. 개발 시 참고한 공식 문서: [GNews 날짜 필터](https://docs.gnews.io/endpoints/top-headlines-endpoint), [GNews search](https://docs.gnews.io/endpoints/search-endpoint), [NewsData 범위](https://newsdata.io/documentation).
+공급자의 요청당 제한과 상한 때문에 기간 내 모든 기사를 수집하는 구조는 아닙니다. 2026-10-14 사용자가 두 API 모두 무료 플랜이라고 확인하여 `account_plan`에 `free`를 기록했습니다. 대시보드를 직접 조회한 검증은 아닙니다. 공개 조건은 [뉴스 이용 조건 확인](NEWS_USAGE_REVIEW.md)을 따릅니다. 개발 시 참고한 공식 문서: [GNews 날짜 필터](https://docs.gnews.io/endpoints/top-headlines-endpoint), [GNews search](https://docs.gnews.io/endpoints/search-endpoint), [NewsData 범위](https://newsdata.io/documentation).
 
 응답 완료 후 GNews 1.25초, NewsData .25초 간격을 둡니다. GNews의 429 속도 제한과 403 일일 quota를 구분합니다. API 뉴스 기본 재시도는 0회이며 4xx 오류를 무한 재시도하지 않습니다. [GNews 오류](https://docs.gnews.io/error-handling)
 
