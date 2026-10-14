@@ -19,17 +19,16 @@ GNews는 성능을 위한 합리적인 응답 캐시를 허용하지만 제한 �
 
 첫 원문 사진의 URL이 API나 OG 메타데이터로 제공된다는 사실만으로 재사용 권한을 확인할 수 없습니다. 출처 표시와 원문 링크를 붙였다는 이유만으로 사진 권한이 확보되지는 않습니다. 유료 API로 전환해도 언론사 사진 권리는 별도로 확인해야 합니다. [GNews 약관 §3.3](https://gnews.io/legal/terms-of-service), [NewsData 데이터 권리 조건](https://newsdata.io/terms)
 
-공개판 진행 방식은 사용자에게 확인 중입니다.
+사용자는 사진을 유지하는 개인 확인용을 선택했습니다. Cloudflare에 사진을 포함한 Live를 배포했고, 이후 메일 인증 없이 지정 이메일 입력만으로 입장하도록 변경을 요청하여 적용했습니다.
 
-- 사진 없이 실제 뉴스의 사실 중심 요약과 원문 링크부터 공개하는 방식
-- 첫 원문 사진의 이용 권한을 확인한 뒤 사진을 포함해 공개하는 방식
+`usage_scope=local_private`, `public_reuse_granted=false`, `permission_reference=null`을 유지하며 Live JSON을 public으로 재표시하지 않습니다. 서버에서 이메일을 비교하고 서명 쿠키가 있어야 뉴스 파일을 제공합니다. 이는 본인 인증이 아니며 같은 이메일을 아는 사람도 입장할 수 있습니다. 이전 개별 배포 주소는 Cloudflare Access로 보호합니다. [현재 개인용 운영 안내](CLOUDFLARE_PRIVATE_SETUP.md)
 
-현재는 기존 요청의 사진 기능을 유지하고 공개 설정을 바꾸지 않았습니다. `usage_scope=local_private`, `public_reuse_granted=false`, `permission_reference=null`이며 기존 private Live JSON을 public으로 재표시하지 않습니다. 공개 방식 결정 후 실제 사용 범위와 근거를 설정에 기록하고 새 공개 에디션을 생성·검증합니다. 무료 플랜은 제공 텍스트가 짧고 지연될 수 있으므로 근거가 부족한 후보는 제외합니다.
+무료 플랜은 제공 텍스트가 짧고 지연될 수 있으므로 근거가 부족한 후보는 제외합니다. 개인용 결과를 공개 서비스로 전환할 때는 사진과 뉴스 이용 조건을 다시 확인합니다.
 
 ## 현재 공개 및 자동 갱신 상태
 
-- [Cloudflare Production 주소](https://today-issue-dlwo8520.pages.dev)는 DEMO 이슈 6개이며 실제 뉴스로 오인하지 않도록 DEMO를 표시합니다.
-- 첫 배포와 HTTPS·공개 주소 브라우저 검증을 완료했습니다.
+- [Cloudflare Production 주소](https://today-issue-dlwo8520.pages.dev)는 실제 이슈 6개·첫 원문 사진 6개이며 지정 이메일 입력으로 입장합니다.
+- 입력 전 데이터 차단·다른 이메일 거부·입력 후 실제 JSON·PC/모바일 브라우저 검증을 완료했습니다.
 - GitHub Actions Secrets는 사용자가 아직 미등록이라고 확인했습니다. 연결 도구는 Secrets 쓰기를 지원하지 않습니다.
 - [Cloudflare 설정 문서](CLOUDFLARE_SETUP.md)의 Secrets 등록 후 Actions 배포를 확인합니다. 실제 뉴스 자동 갱신에는 뉴스·OpenAI Secrets 세 개도 필요합니다.
 

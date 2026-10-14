@@ -6,7 +6,9 @@
 
 [**기획부터 현재까지 전체 1차 개발 정리**](docs/PHASE_1_REPORT.md) · [API 실행 안내](docs/API_LIVE_INTEGRATION.md) · [검증 결과](docs/VALIDATION.md) · [화면 수정 기록](docs/UI_REVISION.md) · [운영 준비](docs/LIVE_LAUNCH_CHECKLIST.md)
 
-**공개 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)** — 2026-10-14 Cloudflare Pages에 가상 이슈 6개의 DEMO를 배포하고 실제 주소의 브라우저 검사 5개를 통과했습니다. 실제 뉴스 공개와 GitHub 자동 배포는 아직 활성화하지 않았습니다.
+**접속 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)** — 2026-10-14 새로 수집·검증한 실제 이슈 6개와 첫 원문 사진 6개를 배포했습니다. 지정한 이메일 입력만으로 입장하며 메일 인증번호·비밀번호를 요구하지 않습니다. 입력 전에는 뉴스 JSON을 제공하지 않습니다. [개인용 설정 안내](docs/CLOUDFLARE_PRIVATE_SETUP.md)
+
+이메일 일치 확인은 본인 인증이 아닙니다. 같은 이메일을 아는 다른 사람도 입장할 수 있습니다. 실제 주소의 이메일 입력·뉴스·사진·PC·모바일·상세 이동 검사를 통과했습니다. GitHub 자동 갱신은 Secrets 미등록으로 대기 상태입니다.
 
 ## 현재 상태
 
@@ -16,10 +18,10 @@
 | 화면 | PC 3열 · 태블릿 2열 · 모바일 1열, 공유 가능한 상세 hash URL |
 | 뉴스 | GNews 날짜 구간·페이지 조회 + NewsData 최신 관련 기사 + 기간 내 로컬 수집 이력 |
 | 선정 | 복수 언론사·독립 원출처 조건 → 최신 발행 순 → GPT 3단계·코드 검증 |
-| 최신 로컬 결과 | 291건 스냅샷 → 285건 분석 → 270그룹 → 적격 후보 8개 → 검증 통과 6개 |
-| 검증 | 현재 Python 100 · 프론트 20 · 공개 DEMO 브라우저 5 통과; 실제 Live 브라우저 1은 1차 단계에서 확인 |
+| 최신 결과 | 451건 스냅샷 → 440건 분석 → 413그룹 → 적격 후보 17개 → 검증 통과 6개 |
+| 검증 | Python 112 · 이메일 입장 서버 8 · 프론트 20 · DEMO 브라우저 5 · 실제 주소 Live 브라우저 1 통과 |
 | 뉴스 이용 범위 | local_private; GNews·NewsData 모두 무료 플랜이라고 사용자 확인, 사진 공개 이용 권한 미확인 |
-| 공개 배포 | Cloudflare Pages DEMO 운영; GitHub Actions Secrets 미등록 |
+| 배포 | Cloudflare Pages 실제 Live·이메일 입력 입장; GitHub Actions Secrets 미등록 |
 | GitHub 전달 범위 | 소스·가상 DEMO·테스트·문서; 실제 키와 비공개 Live 자료 제외 |
 
 DEMO는 가상 사건·매체 6개와 example.com 링크를 사용합니다. 무료 플랜 자체를 공개 금지로 판단하지 않습니다. GNews의 비상업적 이용 조건과 언론사 사진의 별도 권리는 [뉴스 이용 조건 확인](docs/NEWS_USAGE_REVIEW.md)에 기록했습니다. 세부 한계와 이력은 전체 정리 문서에 있습니다.
@@ -93,7 +95,7 @@ npm run test:e2e -- tests/browser/site.spec.ts
 
 Live 화면 결과는 public/data/latest.json과 status.json이며 Git에서 제외합니다. 원문·캐시·진단은 data/raw·cache·debug·reports에 저장합니다. 실패 시 이전 정상 JSON을 보존하고 Live를 DEMO로 대체하지 않습니다. 실제 원문 사진 URL만 연결하며 사진 파일을 저장소에 복사하지 않습니다.
 
-GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. 현재 배포 대상은 **Cloudflare Pages**이며 첫 DEMO는 직접 배포했습니다. 사용자가 Actions Secrets를 아직 등록하지 않았다고 확인했으므로 자동 배포는 대기 상태입니다. Secrets 두 개를 등록한 뒤 수동 demo 실행으로 Actions 배포를 확인합니다. ENABLE_CLOUDFLARE=true는 main push 배포를 활성화하고 NEWS_MODE=live일 때 KST 오전 7시 예약도 활성화합니다. 공개 Live는 뉴스·사진 이용 근거와 API Secrets를 별도로 확인해야 합니다. [Cloudflare 실행 안내](docs/CLOUDFLARE_SETUP.md)
+GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. 실제 Live는 Cloudflare에 직접 배포했습니다. Secrets 등록 후 개인용은 mode `private`, Variable `NEWS_MODE=private`를 사용합니다. `ENABLE_CLOUDFLARE=true`가 main push와 KST 오전 7시 예약을 활성화합니다. 개인용 빌드는 이메일 입장 서버·서명 키 설정·이전 배포 주소의 보호를 검사합니다. 현재 Secrets는 미등록이므로 자동 운영은 대기 상태입니다. [개인용 운영 설정](docs/CLOUDFLARE_PRIVATE_SETUP.md)
 
 공개 빌드는 python scripts/build_public.py --mode demo로 .tools/public-deploy/dist에 생성합니다. 로컬 private Live 파일을 포함하지 않도록 선택한 데이터만 별도 staging에서 빌드합니다. 기존 private dist와 .env는 유지합니다.
 
@@ -109,6 +111,7 @@ GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. �
 - [HOSTING_OPTIONS](docs/HOSTING_OPTIONS.md): 공개 도메인 배포 후보·비용·장단점 비교
 - [CLOUDFLARE_SETUP](docs/CLOUDFLARE_SETUP.md): 실제 Cloudflare 배포·계정 연결·일일 갱신 설정
 - [NEWS_USAGE_REVIEW](docs/NEWS_USAGE_REVIEW.md): 무료 플랜 확인과 실제 뉴스·사진 공개 조건
+- [CLOUDFLARE_PRIVATE_SETUP](docs/CLOUDFLARE_PRIVATE_SETUP.md): 본인 이메일 인증번호 로그인과 개인용 Live 빌드
 - [LIVE_LAUNCH_CHECKLIST](docs/LIVE_LAUNCH_CHECKLIST.md): 공개 운영 준비
 - [WEEKLY_UPDATE](docs/WEEKLY_UPDATE.md), [FINAL_REPORT](docs/FINAL_REPORT.md): 7일 단계와 최초 DEMO 단계의 이력
 

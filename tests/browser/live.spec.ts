@@ -14,6 +14,10 @@ test('real Live JSON renders with sources, no DEMO, and working direct URLs', as
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('./');
+    if (process.env.TEST_PERSONAL_EMAIL && await page.locator('[data-personal-entry="email"]').count()) {
+      await page.getByLabel('이메일', { exact: true }).fill(process.env.TEST_PERSONAL_EMAIL);
+      await page.getByRole('button', { name: '들어가기' }).click();
+    }
     await expect(page.locator('.issue-card')).toHaveCount(edition.issues.length);
     await expect(page.getByText('DEMO 에디션')).toHaveCount(0);
     await expect(page.getByText('마지막 업데이트')).toBeVisible();
