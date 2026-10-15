@@ -15,6 +15,7 @@ from .models import Article, Edition
 from .news_apis import GNewsAdapter, NewsAPIError, NewsDataAdapter, collect_api_news, known_publisher
 from .normalize import KST, deduplicate
 from .ranking import rank_groups
+from .service import require_updates_enabled
 from .storage import atomic_json, pipeline_lock, save_edition
 from .summarize import GPTSummarizer
 from .usage import BudgetExceeded, LocalCache, UsageLedger, redact
@@ -127,6 +128,7 @@ def request_plan(args: Any, config: dict, api_config: dict) -> dict:
 
 
 def run_api_stage(args: Any) -> int:
+    require_updates_enabled()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     api_config = load_api_settings(args.api_config)
     for option, setting in [("max_news_requests", "max_news_requests"), ("max_related_queries", "max_related_queries"),

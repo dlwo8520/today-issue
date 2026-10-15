@@ -1,7 +1,11 @@
 import { editionSchema, statusSchema, type Edition, type UpdateStatus } from '../types/news';
+import service from '../../config/service.json';
 
 export type DataMode = 'demo' | 'live';
 export const DATA_MODE: DataMode = import.meta.env.VITE_DATA_MODE === 'live' ? 'live' : 'demo';
+export const EDITION_FROZEN = service.updates_enabled === false;
+export const isFrozen = (edition: Edition) => edition.mode === 'live' && EDITION_FROZEN;
+export const editionTimeLabel = (edition: Edition) => edition.mode === 'demo' ? '샘플 작성 시각' : isFrozen(edition) ? '고정 기준 시각' : '마지막 업데이트';
 export async function loadEdition(mode: DataMode, signal?: AbortSignal): Promise<Edition> {
   const response = await fetch(`${import.meta.env.BASE_URL}data/${mode === 'demo' ? 'demo' : 'latest'}.json`, { signal, cache: 'no-cache' });
   if (!response.ok) throw new Error('뉴스 데이터를 불러오지 못했습니다.');
@@ -20,7 +24,7 @@ export const formatDate = (date: string) => new Intl.DateTimeFormat('ko-KR', {
 export const formatTime = (date: string) => new Intl.DateTimeFormat('ko-KR', {
   timeZone: 'Asia/Seoul', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false,
 }).format(new Date(date));
-export const isStale = (edition: Edition, now = Date.now()) => edition.mode === 'live' && now - Date.parse(edition.updatedAt) > 30 * 60 * 60 * 1000;
+export const isStale = (edition: Edition, now = Date.now()) => edition.mode === 'live' && !isFrozen(edition) && now - Date.parse(edition.updatedAt) > 30 * 60 * 60 * 1000;
 export const publisherCount = (issue: Edition['issues'][number]) => new Set(issue.sources.map(s => s.publisherKey || s.publisher)).size;
 export const windowLabel = (edition: Edition) => {
   const hours = (Date.parse(edition.windowEnd) - Date.parse(edition.windowStart)) / 3600000;

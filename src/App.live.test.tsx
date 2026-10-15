@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, expect, test, vi } from 'vitest';
 import fixture from '../public/data/demo.json';
+vi.mock('../config/service.json', () => ({ default: { updates_enabled: true } }));
 vi.mock('./lib/data', async importOriginal => ({ ...await importOriginal<typeof import('./lib/data')>(), DATA_MODE: 'live' }));
 import App from './App';
 

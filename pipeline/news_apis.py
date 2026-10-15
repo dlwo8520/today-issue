@@ -16,6 +16,7 @@ from pydantic import ValidationError
 
 from .models import Article
 from .normalize import KST, article_id, canonical_url, clean_text, deduplicate, parse_date
+from .service import require_updates_enabled
 from .usage import BudgetExceeded, LocalCache, UsageLedger, redact
 
 ENDPOINTS = {"gnews": "https://gnews.io/api/v4/top-headlines", "newsdata": "https://newsdata.io/api/1/latest"}
@@ -159,6 +160,7 @@ class NewsAPIAdapter:
         self.next_request_at = 0.0
 
     def fetch(self, params: dict[str, object], endpoint: str | None = None) -> tuple[dict, datetime, str]:
+        require_updates_enabled()
         endpoint = endpoint or ENDPOINTS[self.provider]
         key = os.environ.get(KEY_NAMES[self.provider], "").strip()
         if not key:

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
+const service = JSON.parse(readFileSync('config/service.json', 'utf8'));
 
 test.skip(!process.env.TEST_REAL_LIVE, 'Opt-in local private Live verification only');
 test('real Live JSON renders with sources, no DEMO, and working direct URLs', async ({ page }) => {
@@ -10,6 +11,11 @@ test('real Live JSON renders with sources, no DEMO, and working direct URLs', as
   const articleTimes = edition.issues.map((issue: { sources: { publishedAt: string }[] }) => Math.max(...issue.sources.map(source => Date.parse(source.publishedAt))));
   expect(articleTimes).toEqual([...articleTimes].sort((a, b) => b - a));
   const errors: string[] = [];
+  const apiRequests: string[] = [];
+  await page.route(/^https:\/\/(?:api\.openai\.com|gnews\.io|newsdata\.io)\//, route => {
+    apiRequests.push(new URL(route.request().url()).hostname);
+    return route.abort();
+  });
   page.on('pageerror', error => errors.push(error.message));
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -20,7 +26,8 @@ test('real Live JSON renders with sources, no DEMO, and working direct URLs', as
     }
     await expect(page.locator('.issue-card')).toHaveCount(edition.issues.length);
     await expect(page.getByText('DEMO 에디션')).toHaveCount(0);
-    await expect(page.getByText('마지막 업데이트')).toBeVisible();
+    await expect(page.getByText(service.updates_enabled ? '마지막 업데이트' : '고정 기준 시각')).toBeVisible();
+    if (!service.updates_enabled) await expect(page.getByText('고정 에디션')).toBeVisible();
     if (Date.parse(edition.windowEnd) - Date.parse(edition.windowStart) === 168 * 3600000) {
       await expect(page.locator('#page-title')).toContainText('최근 7일');
     }
@@ -62,4 +69,5 @@ test('real Live JSON renders with sources, no DEMO, and working direct URLs', as
     }
   }
   expect(errors).toEqual([]);
+  expect(apiRequests).toEqual([]);
 });

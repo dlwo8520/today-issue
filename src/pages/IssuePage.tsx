@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Edition, Issue, Statement } from '../types/news';
-import { formatTime, publisherCount } from '../lib/data';
+import { editionTimeLabel, formatTime, publisherCount } from '../lib/data';
 import { Icon } from '../components/Icon';
 import { SourceLinks } from '../components/SourceLinks';
 import { ArticlePhoto } from '../components/ArticlePhoto';
@@ -31,7 +31,7 @@ export function IssuePage({ issue, edition }: { issue: Issue; edition: Edition }
     <ReadingSection title="어떤 반응이 있나요?" statements={issue.response} terms={terms} />
     {issue.terminology.length > 0 && <section className="terminology"><h2><Icon name="book" />어려운 용어 알아보기</h2><dl>{issue.terminology.map(term => <div key={term.term}><dt>{term.term}</dt><dd>{term.explanation}</dd></div>)}</dl></section>}
     <section className="reading-section sources-section"><h2>원문 확인하기</h2><p className="section-description">{edition.mode === 'demo' ? '출처 링크의 구성을 보여주는 가상 기사입니다.' : '서로 다른 보도를 직접 읽고 맥락을 확인해 보세요.'}</p><SourceLinks sources={issue.sources} demo={edition.mode === 'demo'} /></section>
-    <p className="small-note">{edition.mode === 'demo' ? '샘플 작성 시각' : '마지막 업데이트'} {formatTime(edition.updatedAt)} KST</p><div className="article-bottom"><a href="#/" className="back-link"><Icon name="back" />목록으로 돌아가기</a><button onClick={copyLink} className="copy-button">링크 복사 <Icon name="external" /></button></div><p className="copy-status" role="status">{copyStatus}</p>
+    <p className="small-note">{editionTimeLabel(edition)} {formatTime(edition.updatedAt)} KST</p><div className="article-bottom"><a href="#/" className="back-link"><Icon name="back" />목록으로 돌아가기</a><button onClick={copyLink} className="copy-button">링크 복사 <Icon name="external" /></button></div><p className="copy-status" role="status">{copyStatus}</p>
   </article><nav className="issue-sidebar" aria-label="이슈 목록">
     <h2>이슈 목록 <span>{String(edition.issues.length).padStart(2, '0')}</span></h2>
     <ol>{edition.issues.map(item => <li key={item.id}><a href={`#/issue/${encodeURIComponent(item.id)}`} aria-current={item.id === issue.id ? 'page' : undefined}>

@@ -11,6 +11,7 @@ from pydantic import Field, ValidationError, model_validator
 
 from .models import Article, StrictModel, validate_url
 from .normalize import KST, article_id, canonical_url, clean_text, parse_date
+from .service import require_updates_enabled
 
 LOG = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ class NewsSourceAdapter(Protocol):
 
 def fetch_feed(client: httpx.Client, url: str, retries: int = 2, max_bytes: int = 2_097_152) -> bytes:
     """No access bypass: 4xx is terminal, transient failures have bounded retry."""
+    require_updates_enabled()
     for attempt in range(retries + 1):
         try:
             with client.stream("GET", url) as response:

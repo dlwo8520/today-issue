@@ -15,6 +15,8 @@ from tests.python.conftest import ROOT
 from tests.python.test_news_apis import gnews_payload, newsdata_payload
 from tests.python.test_summary_pipeline import payloads
 
+pytestmark = pytest.mark.usefixtures("offline_updates")
+
 
 def args_for(tmp_path, **overrides):
     values = dict(config=ROOT / "config/pipeline.json", api_config=ROOT / "config/news_apis.json",

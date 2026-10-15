@@ -17,6 +17,7 @@ from .grouping import group_articles
 from .models import Article, Edition, Issue, Source, Summary
 from .normalize import KST, deduplicate
 from .ranking import balanced_sources, rank_groups
+from .service import UpdatesDisabled, require_updates_enabled
 from .sources import RSSAdapter, SourceConfig, collect_sources
 from .storage import atomic_json, pipeline_lock, save_edition
 from .summarize import GPTSummarizer, SummaryRejected
@@ -76,6 +77,7 @@ def build_edition(articles: list[Article], now: datetime, config: dict, summariz
 
 
 def run_live(output: Path, source_file: Path, config_file: Path) -> int:
+    require_updates_enabled()
     now = datetime.now(KST)
     status_file = output.parent / "status.json"
     try:
@@ -141,6 +143,11 @@ def main() -> int:
             parser.error("DEMO output cannot use the Live latest.json filename")
         save_edition(output, fixture)
         LOG.info("DEMO fixture validated and saved; no API called")
+        return 0
+    try:
+        require_updates_enabled()
+    except UpdatesDisabled as exc:
+        LOG.info("%s", exc)
         return 0
     if args.collector == "rss":
         if args.stage != "live" or args.dry_run:

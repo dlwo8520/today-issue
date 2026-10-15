@@ -22,6 +22,8 @@ from pipeline.ranking import rank_groups
 from pipeline.usage import BudgetExceeded, LocalCache, UsageLedger, redact
 from tests.python.conftest import NOW, ROOT
 
+pytestmark = pytest.mark.usefixtures("offline_updates")
+
 
 @pytest.fixture
 def api_config():

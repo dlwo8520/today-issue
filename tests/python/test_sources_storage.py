@@ -10,6 +10,8 @@ from pipeline.sources import RSSAdapter, SourceConfig, collect_sources, fetch_fe
 from pipeline.storage import atomic_json, pipeline_lock, save_edition
 from tests.python.conftest import NOW, ROOT
 
+pytestmark = pytest.mark.usefixtures("offline_updates")
+
 
 def permitted_source():
     return SourceConfig(id="fixture", publisher="A", url="https://example.com/rss", policyUrl="https://example.com/policy",

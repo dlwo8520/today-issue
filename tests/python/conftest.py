@@ -11,6 +11,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture
+def offline_updates(tmp_path_factory, monkeypatch):
+    """Permit only the existing mocked pipeline tests through a temporary policy."""
+    from pipeline import service
+    policy = tmp_path_factory.mktemp("mock-policy") / "service.json"
+    policy.write_text('{"updates_enabled": true}', encoding="utf-8")
+    monkeypatch.setattr(service, "SERVICE_FILE", policy)
+
+
+@pytest.fixture
 def config():
     return json.loads((ROOT / "config/pipeline.json").read_text(encoding="utf-8"))
 

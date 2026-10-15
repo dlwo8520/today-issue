@@ -20,6 +20,8 @@ from pipeline.summarize import (
 )
 from tests.python.conftest import NOW, ROOT
 
+pytestmark = pytest.mark.usefixtures("offline_updates")
+
 
 def payloads(articles):
     ids = [a.id for a in articles]

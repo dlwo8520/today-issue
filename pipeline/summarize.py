@@ -10,6 +10,7 @@ from pydantic import Field
 
 from .models import Article, Statement, StrictModel, Summary
 from .prompts import EDITOR_SYSTEM, EXTRACT_TASK, SUMMARY_TASK, VERIFY_SYSTEM
+from .service import require_updates_enabled
 from .usage import LocalCache, UsageLedger
 
 T = TypeVar("T", bound=StrictModel)
@@ -156,6 +157,7 @@ def validate_summary(summary: Summary, articles: list[Article], extraction: Extr
 class GPTSummarizer:
     def __init__(self, client: OpenAI | None = None, model: str | None = None, *, ledger: UsageLedger | None = None,
                  cache: LocalCache | None = None, fresh: bool = False):
+        require_updates_enabled()
         self.model = model or os.environ.get("OPENAI_MODEL", "").strip()
         if not self.model or (client is None and not os.environ.get("OPENAI_API_KEY")):
             raise ValueError("Set OPENAI_API_KEY and OPENAI_MODEL; no default model or fake fallback")
@@ -163,6 +165,7 @@ class GPTSummarizer:
         self.ledger, self.cache, self.fresh = ledger, cache, fresh
 
     def structured(self, system: str, payload: dict, schema: type[T]) -> T:
+        require_updates_enabled()
         stage = schema.__name__
         key = {"model": self.model, "system": system, "payload": payload, "schema": schema.model_json_schema()}
         cached = self.cache.get("gpt", key, permanent=True) if self.cache and not self.fresh else None

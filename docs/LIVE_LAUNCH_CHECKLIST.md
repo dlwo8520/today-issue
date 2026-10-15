@@ -1,3 +1,5 @@
+> **2026-10-15 운영 변경:** 현재는 저장된 에디션을 고정 표시하며 GPT·뉴스 API와 갱신을 중지했습니다. 아래 API 실행·예약 자동화 안내는 이전 구현 기록이며 현재 workflow에서는 동작하지 않습니다. [현재 운영 상태](FROZEN_EDITION.md)
+
 # 오늘의 잇슈 — 실제 운영 준비 체크리스트
 
 > 현재(2026-10-15)는 Cloudflare에 실제 이슈 6개·사진 6개를 배포했으며 지정 이메일 입력으로 입장합니다. [최신 화면과 검증](READABILITY_UPDATE.md), [실제 운영 안내](CLOUDFLARE_PRIVATE_SETUP.md). GitHub 자동 갱신은 Secrets 등록이 남아 있습니다. 아래 체크리스트는 2026-10-13 초기 계획이며 GitHub Pages·ENABLE_PAGES 항목은 이력입니다.

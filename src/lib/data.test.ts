@@ -38,7 +38,7 @@ test('KST date and stale live status', () => {
   expect(formatDate('2026-10-13')).toContain('13일');
   const edition = editionSchema.parse(fixture);
   expect(isStale(edition, Date.parse(edition.updatedAt) + 40 * 3600000)).toBe(false);
-  expect(isStale({ ...edition, mode: 'live' }, Date.parse(edition.updatedAt) + 40 * 3600000)).toBe(true);
+  expect(isStale({ ...edition, mode: 'live' }, Date.parse(edition.updatedAt) + 365 * 24 * 3600000)).toBe(false);
   expect(windowLabel(edition)).toBe('지난 24시간');
   expect(windowLabel({ ...edition, windowStart: new Date(Date.parse(edition.windowEnd) - 168 * 3600000).toISOString() })).toBe('최근 7일');
   expect(windowLabel({ ...edition, windowStart: new Date(Date.parse(edition.windowEnd) - 336 * 3600000).toISOString() })).toBe('최근 2주');

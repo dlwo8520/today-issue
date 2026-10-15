@@ -19,6 +19,8 @@ from pipeline.usage import LocalCache, UsageLedger
 from tests.python.conftest import NOW, ROOT
 from tests.python.test_news_apis import gnews_payload
 
+pytestmark = pytest.mark.usefixtures("offline_updates")
+
 
 @pytest.fixture
 def weekly_settings():

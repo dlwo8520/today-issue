@@ -1,33 +1,20 @@
-name: Cloudflare edition
+name: Source checks
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  schedule:
-    # 22:00 UTC on the previous day = 07:00 Asia/Seoul. Execution can be delayed.
-    - cron: '0 22 * * *'
-  workflow_dispatch:
-    inputs:
-      mode:
-        description: 'Deploy DEMO, approved public Live, or email-entry personal Live'
-        required: true
-        default: demo
-        type: choice
-        options: [demo, live, private]
 
 permissions:
   contents: read
 
 concurrency:
-  group: today-issue-${{ github.ref }}
-  cancel-in-progress: false
+  group: today-issue-checks-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   checks:
-    # Source changes run CI; daily public Live updates are explicitly opt-in.
-    if: github.event_name != 'schedule' || (vars.ENABLE_CLOUDFLARE == 'true' && (vars.NEWS_MODE == 'live' || vars.NEWS_MODE == 'private'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,190 +37,3 @@ jobs:
       - run: npm run test:e2e
         env:
           VITE_DATA_MODE: demo
-
-  prepare:
-    if: (github.event_name == 'workflow_dispatch' || vars.ENABLE_CLOUDFLARE == 'true') && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: checks
-    runs-on: ubuntu-latest
-    outputs:
-      production_url: ${{ steps.project.outputs.production_url }}
-      data_mode: ${{ env.TARGET_MODE == 'private' && 'live' || env.TARGET_MODE }}
-      deployment_scope: ${{ env.TARGET_MODE }}
-    permissions:
-      contents: read
-      actions: read
-    env:
-      TARGET_MODE: ${{ inputs.mode || vars.NEWS_MODE || 'demo' }}
-      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME || 'today-issue-dlwo8520' }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: pip
-      - run: pip install -r requirements.lock.txt
-      - name: Check Live publication permission before spending API budget
-        if: env.TARGET_MODE == 'live'
-        run: python scripts/build_public.py --check-live-permission
-      - name: Check personal login restriction before spending API budget
-        if: env.TARGET_MODE == 'private'
-        run: |
-          test '${{ github.event.repository.private }}' = 'true'
-          python scripts/build_private.py --check-access
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCESS_EMAIL: ${{ vars.CLOUDFLARE_ACCESS_EMAIL }}
-      - name: Validate Cloudflare account and create Direct Upload project if needed
-        id: project
-        run: python scripts/ensure_cloudflare_project.py
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      - name: Download prior news state from this workflow on main
-        if: env.TARGET_MODE == 'live' || env.TARGET_MODE == 'private'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('node:fs');
-            const stateName = process.env.TARGET_MODE === 'private' ? 'private-news-state' : 'news-state';
-            const artifacts = await github.paginate(github.rest.actions.listArtifactsForRepo, { ...context.repo, per_page: 100 });
-            for (const artifact of artifacts.filter(a => a.name === stateName && !a.expired)) {
-              const run = await github.rest.actions.getWorkflowRun({ ...context.repo, run_id: artifact.workflow_run.id });
-              if (run.data.head_branch !== 'main' || run.data.path !== '.github/workflows/daily.yml' || run.data.event === 'pull_request') continue;
-              const archive = await github.rest.actions.downloadArtifact({ ...context.repo, artifact_id: artifact.id, archive_format: 'zip' });
-              fs.mkdirSync('data', { recursive: true });
-              fs.writeFileSync('data/prior-state.zip', Buffer.from(archive.data));
-              core.info('Downloaded prior news-state artifact');
-              break;
-            }
-      - name: Restore validated Live edition
-        if: env.TARGET_MODE == 'live' || env.TARGET_MODE == 'private'
-        run: |
-          if [ "$TARGET_MODE" = 'private' ]; then
-            python scripts/restore_state.py data/prior-state.zip --scope local_private
-          else
-            python scripts/restore_state.py data/prior-state.zip --scope public
-          fi
-      - name: Generate new verified Live edition
-        id: update
-        if: env.TARGET_MODE == 'live' || env.TARGET_MODE == 'private'
-        continue-on-error: true
-        run: python -m pipeline.run --mode live
-        env:
-          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
-      - name: Check publication permission before uploading data
-        id: publication
-        if: always() && env.TARGET_MODE == 'live'
-        run: python scripts/validate_public.py --mode live
-      - name: Validate the personal Live edition
-        id: private_publication
-        if: always() && env.TARGET_MODE == 'private'
-        run: python scripts/build_private.py --check-edition
-      - name: Retain news state even when update fails
-        if: always() && ((env.TARGET_MODE == 'live' && steps.publication.outcome == 'success') || (env.TARGET_MODE == 'private' && steps.private_publication.outcome == 'success'))
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.TARGET_MODE == 'private' && 'private-news-state' || 'news-state' }}
-          path: |
-            public/data/latest.json
-            public/data/status.json
-          retention-days: 90
-          if-no-files-found: warn
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: npm
-      - run: npm ci
-      - name: Build selected edition
-        run: |
-          if [ "$TARGET_MODE" = 'private' ]; then
-            python scripts/build_private.py
-          else
-            python scripts/build_public.py --mode "$TARGET_MODE"
-          fi
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCESS_EMAIL: ${{ vars.CLOUDFLARE_ACCESS_EMAIL }}
-      - name: Report failed update while preserving the prior edition
-        if: steps.update.outcome == 'failure'
-        run: echo '::warning::Update failed. Publishing prior verified edition with explicit stale/error status.'
-      - name: Retain the checked static deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: cloudflare-site
-          path: .tools/public-deploy/dist
-          include-hidden-files: true
-          retention-days: 7
-          if-no-files-found: error
-
-  deploy:
-    needs: prepare
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: cloudflare-site
-          path: site
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Deploy checked files to Cloudflare Pages
-        id: deployment
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy site --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME || 'today-issue-dlwo8520' }} --branch=main
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Verify the deployed page and edition over HTTPS
-        uses: actions/github-script@v7
-        env:
-          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
-          DATA_MODE: ${{ needs.prepare.outputs.data_mode }}
-          DEPLOYMENT_SCOPE: ${{ needs.prepare.outputs.deployment_scope }}
-          PRODUCTION_URL: ${{ needs.prepare.outputs.production_url }}
-        with:
-          script: |
-            const url = new URL(process.env.DEPLOYMENT_URL);
-            if (url.protocol !== 'https:' || !url.hostname.endsWith('.pages.dev') || url.username || url.password) throw new Error('Cloudflare did not return a valid deployment URL');
-            if (process.env.DEPLOYMENT_SCOPE === 'private') {
-              const fs = require('node:fs');
-              const edition = JSON.parse(fs.readFileSync('site/data/latest.json', 'utf8'));
-              if (edition.mode !== 'live' || edition.publicationScope !== 'local_private' || !Array.isArray(edition.issues) || edition.issues.length < 1 || edition.issues.length > 6) throw new Error('Invalid personal Live artifact');
-              for (const host of [url, new URL(process.env.PRODUCTION_URL)]) {
-                for (const path of ['/', '/data/latest.json', '/data/status.json']) {
-                  const response = await fetch(new URL(path, host), { redirect: 'manual', signal: AbortSignal.timeout(20000) });
-                  if ([401, 403].includes(response.status)) continue;
-                  const location = response.headers.get('location');
-                  const login = location && new URL(location, host);
-                  const entry = login && login.hostname === host.hostname && login.pathname === '/login';
-                  const legacy = login && login.hostname.endsWith('.cloudflareaccess.com') && login.pathname.startsWith('/cdn-cgi/access/login');
-                  if (![302, 303, 307].includes(response.status) || (!entry && !legacy)) throw new Error('Personal data is reachable without entering the configured email');
-                }
-              }
-              core.info(`Verified personal Live artifact with ${edition.issues.length} issues and blocked anonymous routes`);
-              return;
-            }
-            const page = await fetch(url, { signal: AbortSignal.timeout(20000) });
-            if (!page.ok || !(await page.text()).includes('<div id="root">')) throw new Error('Deployed page is unavailable');
-            const mode = process.env.DATA_MODE;
-            const filename = mode === 'demo' ? 'demo.json' : 'latest.json';
-            const response = await fetch(new URL(`data/${filename}`, url), { signal: AbortSignal.timeout(20000) });
-            if (!response.ok) throw new Error('Deployed edition is unavailable');
-            const edition = await response.json();
-            if (edition.mode !== mode || edition.publicationScope !== 'public' || !Array.isArray(edition.issues) || edition.issues.length > 6) throw new Error('Deployed edition does not match the public mode');
-            core.info(`Verified public ${mode} edition with ${edition.issues.length} issues`);
-      - name: Record published address
-        env:
-          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
-          PRODUCTION_URL: ${{ needs.prepare.outputs.production_url }}
-        run: |
-          printf '### Cloudflare Pages\n\n- Deployment: %s\n- Production: %s\n' "$DEPLOYMENT_URL" "$PRODUCTION_URL" >> "$GITHUB_STEP_SUMMARY"
