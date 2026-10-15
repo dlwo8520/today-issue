@@ -12,7 +12,7 @@ export function HomePage({ edition }: { edition: Edition }) {
     <section className="issues-section" aria-labelledby="issues-title">
       <div className="section-heading"><h2 id="issues-title">{edition.mode === 'demo' ? '오늘의 이슈 미리보기' : '오늘의 주요 보도 이슈'} <span>{String(edition.issues.length).padStart(2, '0')}</span></h2><span className="reading-time"><Icon name="clock" />목표 읽기 시간 약 5분</span></div>
       {edition.issues.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 issue-grid">{edition.issues.map(issue => <IssueCard key={issue.id} issue={issue} />)}</div> : <div className="empty-state"><Icon name="book" /><h3>아직 준비된 이슈가 없습니다</h3><p>확인할 수 있는 이슈가 모이면 이곳에 전해드릴게요.</p></div>}
-      <div className="edition-meta"><span>{edition.mode === 'demo' ? '샘플 작성 시각' : '마지막 업데이트'} <time dateTime={edition.updatedAt}>{formatTime(edition.updatedAt)} KST</time></span><span>하루 한 번, 오전 7시에 만나요.</span></div>
+      <div className="edition-meta"><span>{edition.mode === 'demo' ? '샘플 작성 시각' : '마지막 업데이트'} <time dateTime={edition.updatedAt}>{formatTime(edition.updatedAt)} KST</time></span><span>{windowLabel(edition)} · {edition.mode === 'demo' ? '가상 이슈 미리보기' : '최신 기사 발행 순'}</span></div>
     </section>
     <section className="editorial-note" aria-label="편집 원칙"><span className="note-symbol">“</span><div><h2>많이 읽는 것보다, 잘 이해하는 것.</h2><p>같은 사건은 하나로 모으고, 어려운 말은 풀어서 설명합니다.<br />사실과 주장을 구분하고, 모든 이야기의 출처를 함께 전합니다.</p></div><span className="note-wordmark">LESS NEWS.<br />MORE CONTEXT.</span></section>
   </div>;

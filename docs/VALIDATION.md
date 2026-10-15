@@ -1,5 +1,7 @@
 # 실행 검증 기록
 
+> 2026-10-15 가독성 개선: 프론트 21개·DEMO 프로덕션 브라우저 5개·실제 Cloudflare Live 브라우저 1개 통과, TypeScript 및 두 배포 모드 빌드 성공. 오늘 새로 생성한 이슈·첫 원문 사진 6개, 이메일 입력·PC/모바일·원문·상세 이동·접근성과 배포 JSON 일치를 확인했습니다. [변경·검증 상세](READABILITY_UPDATE.md).
+
 > 현재 개인용 Live 검증(2026-10-14): Python 112개·서버 이메일 입장 8개 통과, Ruff·TypeScript·개인용 빌드 성공. 실제 Cloudflare 주소에서 이메일 입력·사진 6개·PC/모바일·상세 이동·접근성 Live 브라우저 1개 통과. 입력 전·위조 쿠키는 입장 화면으로 이동하고 다른 이메일은 403, 지정 이메일은 인증번호 없이 입장하여 원격 JSON과 로컬 빌드의 일치를 확인했습니다. 프론트 20개·DEMO 브라우저 5개는 앞선 검증이며 반복 실행을 고유 개수에 더하지 않습니다. [현재 운영](CLOUDFLARE_PRIVATE_SETUP.md).
 
 > 2026-10-14 Cloudflare 공개 빌드 변경 검증: Python 100개·프론트 20개·공개 DEMO 프로덕션 브라우저 5개 통과, TypeScript·빌드·Ruff 성공. [원격 CI](https://github.com/dlwo8520/today-issue/actions/runs/38499480332)도 성공했습니다. 직접 Cloudflare 배포 후 [실제 공개 주소](https://today-issue-dlwo8520.pages.dev)에서도 브라우저 5개를 통과했습니다. 반복 실행은 고유 검사 수에 더하지 않습니다. 실제 Live 브라우저 1개는 아래 1차 단계의 검증이며 이번 공개 빌드 작업에서 다시 실행하지 않았습니다. [현재 배포 안내](CLOUDFLARE_SETUP.md).

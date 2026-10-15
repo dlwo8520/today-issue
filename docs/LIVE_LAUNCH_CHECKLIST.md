@@ -1,6 +1,6 @@
 # 오늘의 잇슈 — 실제 운영 준비 체크리스트
 
-> 2026-10-14 Cloudflare Pages에 [DEMO 6개를 실제 공개](https://today-issue-dlwo8520.pages.dev)했습니다. 두 뉴스 API 모두 무료 플랜이라고 사용자가 확인했으며 GitHub Secrets는 미등록입니다. 실제 뉴스·사진 공개와 자동 갱신은 대기 상태입니다. [현재 실행·계정 연결 안내](CLOUDFLARE_SETUP.md), [뉴스 이용 조건](NEWS_USAGE_REVIEW.md). 아래 체크리스트는 2026-10-13 초기 계획이며 GitHub Pages·ENABLE_PAGES 항목은 이력입니다.
+> 현재(2026-10-15)는 Cloudflare에 실제 이슈 6개·사진 6개를 배포했으며 지정 이메일 입력으로 입장합니다. [최신 화면과 검증](READABILITY_UPDATE.md), [실제 운영 안내](CLOUDFLARE_PRIVATE_SETUP.md). GitHub 자동 갱신은 Secrets 등록이 남아 있습니다. 아래 체크리스트는 2026-10-13 초기 계획이며 GitHub Pages·ENABLE_PAGES 항목은 이력입니다.
 
 기준일: 2026-10-13 KST. 현재 최근 2주·최신순 최대 6개, 첫 원문 사진과 상세 이동 목록을 구현하고 실제 API·로컬 Live 검증을 완료했습니다. 이 체크리스트는 공개 운영에 필요한 준비와 남은 검증을 관리합니다. [전체 1차 기록](PHASE_1_REPORT.md)
 

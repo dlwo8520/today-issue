@@ -6,7 +6,7 @@
 
 [**기획부터 현재까지 전체 1차 개발 정리**](docs/PHASE_1_REPORT.md) · [API 실행 안내](docs/API_LIVE_INTEGRATION.md) · [검증 결과](docs/VALIDATION.md) · [화면 수정 기록](docs/UI_REVISION.md) · [운영 준비](docs/LIVE_LAUNCH_CHECKLIST.md)
 
-**접속 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)** — 2026-10-14 새로 수집·검증한 실제 이슈 6개와 첫 원문 사진 6개를 배포했습니다. 지정한 이메일 입력만으로 입장하며 메일 인증번호·비밀번호를 요구하지 않습니다. 입력 전에는 뉴스 JSON을 제공하지 않습니다. [개인용 설정 안내](docs/CLOUDFLARE_PRIVATE_SETUP.md)
+**접속 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)** — 2026-10-15 새로 수집·검증한 실제 이슈 6개와 첫 원문 사진 6개를 배포했습니다. 제목·요약 박스·문단 간격·용어 강조를 다듬었습니다. 지정한 이메일 입력만으로 입장하며 메일 인증번호·비밀번호를 요구하지 않습니다. [가독성 개선 기록](docs/READABILITY_UPDATE.md) · [개인용 설정 안내](docs/CLOUDFLARE_PRIVATE_SETUP.md)
 
 이메일 일치 확인은 본인 인증이 아닙니다. 같은 이메일을 아는 다른 사람도 입장할 수 있습니다. 실제 주소의 이메일 입력·뉴스·사진·PC·모바일·상세 이동 검사를 통과했습니다. GitHub 자동 갱신은 Secrets 미등록으로 대기 상태입니다.
 
@@ -18,8 +18,8 @@
 | 화면 | PC 3열 · 태블릿 2열 · 모바일 1열, 공유 가능한 상세 hash URL |
 | 뉴스 | GNews 날짜 구간·페이지 조회 + NewsData 최신 관련 기사 + 기간 내 로컬 수집 이력 |
 | 선정 | 복수 언론사·독립 원출처 조건 → 최신 발행 순 → GPT 3단계·코드 검증 |
-| 최신 결과 | 451건 스냅샷 → 440건 분석 → 413그룹 → 적격 후보 17개 → 검증 통과 6개 |
-| 검증 | Python 112 · 이메일 입장 서버 8 · 프론트 20 · DEMO 브라우저 5 · 실제 주소 Live 브라우저 1 통과 |
+| 최신 결과 | 673건 스냅샷 → 667건 분석 → 628그룹 → 적격 후보 29개 → 검증 통과 6개 |
+| 검증 | Python 112 · 이메일 입장 서버 8 · 프론트 21 · DEMO 브라우저 5 · 실제 주소 Live 브라우저 1 통과 |
 | 뉴스 이용 범위 | local_private; GNews·NewsData 모두 무료 플랜이라고 사용자 확인, 사진 공개 이용 권한 미확인 |
 | 배포 | Cloudflare Pages 실제 Live·이메일 입력 입장; GitHub Actions Secrets 미등록 |
 | GitHub 전달 범위 | 소스·가상 DEMO·테스트·문서; 실제 키와 비공개 Live 자료 제외 |
@@ -107,6 +107,7 @@ GitHub Actions는 소스 push/PR에서 키 없는 DEMO CI를 실행합니다. �
 - [PRD](docs/PRD.md), [ARCHITECTURE](docs/ARCHITECTURE.md): 제품과 구조
 - [API_LIVE_INTEGRATION](docs/API_LIVE_INTEGRATION.md), [SOURCES](docs/SOURCES.md): 수집·출처·권한
 - [UI_REVISION](docs/UI_REVISION.md): 최근 2주·사진·상세 목록 변경
+- [READABILITY_UPDATE](docs/READABILITY_UPDATE.md): 10월 15일 글 가독성 개선·최신 에디션·배포 검증
 - [VALIDATION](docs/VALIDATION.md), [DEPLOYMENT](docs/DEPLOYMENT.md): 검증과 운영
 - [HOSTING_OPTIONS](docs/HOSTING_OPTIONS.md): 공개 도메인 배포 후보·비용·장단점 비교
 - [CLOUDFLARE_SETUP](docs/CLOUDFLARE_SETUP.md): 실제 Cloudflare 배포·계정 연결·일일 갱신 설정
