@@ -1,12 +1,15 @@
+> **개발·조사 이력 — 2026-10-14 배포 후보 비교**
+> 아래 내용은 각 항목의 작성 당시 기록입니다. 현재는 2026-10-15 11:21 KST 고정본을 유지하며 GPT·뉴스 API와 갱신을 중지했습니다. 실행 절차는 [시작하기](GETTING_STARTED.md), 운영 상태는 [고정 운영](FROZEN_EDITION.md)을 따릅니다.
+
 # 오늘의 잇슈 — 공개 도메인 배포 후보와 장단점
 
 작성·공식 문서 확인일: 2026-10-14 KST
 
-**현재 프로젝트에는 Cloudflare Pages + GitHub Actions + 사용자 도메인을 우선 추천합니다.** React 화면과 생성된 뉴스 JSON을 정적으로 제공하고, Python 수집·GPT 처리는 하루 한 번 실행하는 구조를 그대로 활용할 수 있기 때문입니다. 이 추천은 현재 코드 구조와 아래 공식 요금·제약을 비교한 판단입니다.
+**비교 당시 프로젝트에는 Cloudflare Pages + GitHub Actions + 사용자 도메인을 우선 추천합니다.** React 화면과 생성된 뉴스 JSON을 정적으로 제공하고, Python 수집·GPT 처리는 하루 한 번 실행하는 구조를 그대로 활용할 수 있기 때문입니다. 이 추천은 현재 코드 구조와 아래 공식 요금·제약을 비교한 판단입니다.
 
 개인 시연을 빠르게 시작하려면 Vercel도 좋은 후보입니다. GitHub Pages는 기존 배포 설정을 가장 많이 재사용할 수 있지만, 현재 저장소가 비공개라는 점 때문에 GitHub 요금제를 먼저 확인해야 합니다.
 
-이 문서는 배포 전 작성한 후보 비교입니다. 후속 작업에서 Cloudflare를 선택해 [DEMO 사이트](https://today-issue-dlwo8520.pages.dev)를 실제 배포했습니다. 도메인 구매·결제·DNS 변경은 하지 않았습니다. 현재 상태는 [배포 안내](CLOUDFLARE_SETUP.md)를 확인합니다.
+이 문서는 배포 전 작성한 후보 비교입니다. 후속 작업에서 Cloudflare를 선택해 [최초 DEMO 배포 주소](https://today-issue-dlwo8520.pages.dev)를 실제 배포했습니다. 도메인 구매·결제·DNS 변경은 하지 않았습니다. 현재 상태는 [배포 안내](CLOUDFLARE_SETUP.md)를 확인합니다.
 
 ## 1. 사람들이 주소로 접속하려면 필요한 것
 
@@ -83,7 +86,7 @@ Personal은 $9/월·1,000 credits로 안내됩니다. 뉴스 JSON만 별도 저�
 
 가격 예시는 DigitalOcean Basic 1GiB $6/월, 2GiB $12/월입니다. 실제 빌드·파이프라인 메모리 요구량을 측정한 뒤 사양을 선택해야 하며, 백업·추가 저장소·전송 초과는 별도입니다. 지금의 정적 MVP에는 우선순위를 낮게 둡니다. [가격](https://www.digitalocean.com/pricing/droplets)
 
-## 4. 현재 추천 운영 구조
+## 4. 당시 추천 운영 구조
 
 ```mermaid
 flowchart TD

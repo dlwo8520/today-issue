@@ -1,3 +1,6 @@
+> **개발·조사 이력 — 2026-10-13 초기 DEMO·RSS 구현**
+> 아래 내용은 각 항목의 작성 당시 기록입니다. 현재는 2026-10-15 11:21 KST 고정본을 유지하며 GPT·뉴스 API와 갱신을 중지했습니다. 실행 절차는 [시작하기](GETTING_STARTED.md), 운영 상태는 [고정 운영](FROZEN_EDITION.md)을 따릅니다.
+
 # 오늘의 잇슈 — 초기 DEMO·RSS 구현 보고서
 
 이 문서는 첫 DEMO 구현 단계의 이력입니다. 이후 같은 프로젝트에 실제 GNews·NewsData·OpenAI 연동과 로컬 Live 검증을 완료했습니다. 현재 결과는 [README](../README.md), [API 구현](API_LIVE_INTEGRATION.md), [최신 검증](VALIDATION.md), 로컬 비공개 API 결과 보고서(저장소 업로드 제외)에 있습니다. 아래의 실제 API 미실행 설명은 초기 단계의 상태입니다.

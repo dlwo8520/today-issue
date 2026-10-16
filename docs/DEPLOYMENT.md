@@ -1,52 +1,67 @@
-# 소스 전달·배포·운영
+# 배포와 운영
 
-> 2026-10-14에 기본 배포 대상을 Cloudflare Pages로 전환했습니다. 현재 실행 기준과 Secrets·Variables·공개 빌드는 [CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)를 따릅니다. 아래 GitHub Pages·ENABLE_PAGES 설명은 초기 1차 소스 업로드 당시의 이력입니다.
+문서 점검일: **2026-10-16 KST**
 
-현재 실제 API와 로컬 Live는 검증을 완료했습니다. 1차 GitHub 전달 대상은 키와 실제 뉴스 자료를 제외한 소스·DEMO·테스트·문서입니다. 공개 Live 서비스와 원격 예약·복구는 별도 운영 단계입니다. [전체 기록](PHASE_1_REPORT.md)
+현재 서비스는 **Cloudflare에 배포한 고정 페이지**와 **GitHub의 소스 검사**로 구성됩니다. 문서나 소스를 GitHub에 올리는 작업이 뉴스 갱신을 실행하지 않습니다.
 
-## 소스 업로드와 CI
+## 현재 상태
 
-.github/workflows/daily.yml은 main push와 PR에서 Secret 없이 Python·프론트·DEMO 브라우저를 검사합니다. 처음 저장소를 올리는 것만으로 Pages·뉴스 수집을 활성화하지 않습니다.
+| 항목 | 구성 |
+|---|---|
+| 사이트 | [today-issue-dlwo8520.pages.dev](https://today-issue-dlwo8520.pages.dev) |
+| 데이터 | 2026-10-15 11:21 KST 고정본, 이슈 6개 |
+| 입장 | 지정 이메일 입력; 메일 인증번호·비밀번호 없음 |
+| 호스팅 | Cloudflare Pages Direct Upload |
+| GitHub | 비공개 `dlwo8520/today-issue` 저장소 |
+| CI | `main` push와 PR의 소스 검사 |
+| 뉴스 수집·GPT | 공통 중지 정책으로 차단 |
+| 예약·수동 자동화 | workflow에 생성·배포 트리거 및 작업 없음 |
 
-저장소 Variable **ENABLE_PAGES=true**를 설정해야 prepare/deploy가 실행됩니다. 해당 값이 없으면 schedule의 검사·발행도 건너뜁니다. cron 정의는 유지되어 있으며 활성화 시 0 22 * * * UTC, 즉 다음 날 KST 오전 7시입니다. 예약은 지연·누락될 수 있습니다.
+## GitHub와 Cloudflare의 역할
 
-.env·원문·캐시·진단·비공개 API 보고서·Live latest/status·private 빌드·실제 뉴스 사진 캡처는 업로드하지 않습니다. Vite에는 모드와 경로만 전달하며 API 키를 전달하지 않습니다.
+**GitHub**는 소스·가상 DEMO·테스트·문서를 보관합니다. `.github/workflows/daily.yml`의 **Source checks**는 Python·프론트·이메일 입장 서버·DEMO 브라우저를 검사합니다.
 
-## 공개 운영 전 설정
+**Cloudflare**는 기존 빌드 파일과 실제 뉴스 고정본을 제공합니다. Pages Worker가 이메일과 쿠키를 확인한 뒤 파일을 전달합니다.
 
-1. GNews·NewsData 실제 가입 플랜과 AI 전송·보관·공개 요약·메타데이터·사진 사용 범위를 확인하고 근거를 기록합니다.
-2. 확인된 허가 범위에 따라 config/news_apis.json의 usage_scope·public_reuse_granted·permission_reference를 설정합니다. 플래그 변경 자체가 허가 취득은 아닙니다. RSS 권한은 별도입니다.
-3. 저장소 Settings → Pages → Source에서 GitHub Actions를 선택합니다.
-4. Secrets에 GNEWS_API_KEY·NEWSDATA_API_KEY·OPENAI_API_KEY를 설정하고 Variable OPENAI_MODEL을 지정합니다. Live 예약에는 NEWS_MODE=live를 사용합니다.
-5. 계정별 예산을 확인한 뒤 ENABLE_PAGES=true를 설정하고 수동 demo/live 실행·예약·복구를 검증합니다.
+이전 `ENABLE_PAGES`, `ENABLE_CLOUDFLARE`, `NEWS_MODE` 설정은 현재 workflow에서 사용하지 않습니다. Secrets를 등록하는 것만으로 자동 갱신이 시작되지 않습니다.
 
-[공식 Pages 안내](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages), [schedule 안내](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
+## 화면을 바꿔 다시 빌드할 때
 
-## 발행 동작과 예산
+기존 실제 뉴스 고정본과 Python·Node 환경이 있는 작업 폴더를 사용합니다. [시작하기](GETTING_STARTED.md)에서 환경 준비를 확인하세요.
 
-checks → prepare → deploy 순서이며 PR은 검사만 실행합니다. 활성화된 prepare는 이전 공개 news-state 복원, 새 Live 생성, 공개 범위 검사, artifact 보관, 선택 모드 빌드를 수행합니다. 기본 모드는 demo이며 수동 입력 또는 NEWS_MODE Variable로 변경합니다.
-
-현재 기본 상한은 최근 2주 뉴스 26회(GNews 20·NewsData 6), GPT 18회, 성공 이슈 6개입니다. 복수 출처 사건을 최신 기사 발행 시각 순으로 검증하며 실패·예산 소진 시 더 적게 발행할 수 있습니다. --dry-run으로 실제 호출 전에 상한을 확인합니다.
-
-publicationScope=local_private인 결과는 공개 artifact 생성 전에 거부됩니다. DEMO도 public 디렉터리를 복사하므로 private latest.json이 섞여 있으면 거부합니다. 공개 빌드 전에 python scripts/validate_public.py --mode demo 또는 --mode live를 실행합니다. 현재 로컬 config의 private 설정으로 Live를 선택하면 공개 검사를 통과하지 못합니다.
-
-## 상태 복원과 권한
-
-같은 workflow·main에서 생성된 공개 news-state artifact만 다운로드하고 스키마를 검증합니다. 보존 기간은 90일입니다. 정상 이전 에디션을 복원한 뒤 갱신이 실패하면 기존 데이터와 오류/stale 상태를 유지합니다. 첫 발행 실패 또는 유효한 이전 상태가 없으면 새 배포를 중단합니다. 원문·캐시·상세 로그·private 결과는 artifact에도 올리지 않습니다.
-
-같은 ref는 직렬화합니다. 기본 contents:read, prepare actions:read/pages:read, deploy pages:write/id-token:write이며 github-pages 환경을 사용합니다. 실제 원격 실행 로그에서 복원·예약 동작을 확인해야 운영 검증 완료로 기록할 수 있습니다.
-
-## 로컬 확인
+개인용 빌드는 다음 명령입니다.
 
 ~~~powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\dev.ps1 -Mode live
-$env:VITE_DATA_MODE='live'
-npm run build
-python -m http.server 4173 --bind 127.0.0.1 --directory dist
+.\.venv\Scripts\python.exe scripts/build_private.py
 ~~~
 
-현재 dist에는 비공개 Live 자료가 포함되므로 외부 업로드하지 않습니다. hash 상세와 Vite base ./로 정적 경로·새로고침을 지원합니다. Live 실패를 DEMO로 대체하지 않습니다. 사용자가 실행 중인 서버는 유지하고 검사 목적으로 연 서버만 종료합니다.
+이 빌드는 Cloudflare 조회용 환경변수 `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCESS_EMAIL`과 기존 프로젝트 설정이 필요합니다. 이메일 입장·이전 배포 보호를 확인하고 저장된 JSON으로 빌드하며, GPT·뉴스 API를 호출하지 않습니다.
 
-API 인증·모델 오류는 로컬 설정과 계정 접근을, quota/429는 잔량·요청 상한·호출 간격을 확인합니다. 검증 실패를 해결하기 위해 검증을 꺼서 게시하지 않습니다. 잠금 파일은 실행 중인 해당 프로세스가 없다는 것을 확인한 뒤에만 처리합니다.
+산출물은 **`.tools/private-deploy/dist/`**입니다. `_worker.js`와 `_routes.json`을 포함한 검증된 개인용 산출물로 수동 배포합니다. 현재 workflow에는 자동 배포 작업이 없습니다.
 
-공개 전 전체 준비 항목은 [LIVE_LAUNCH_CHECKLIST](LIVE_LAUNCH_CHECKLIST.md)에 있습니다.
+문서 수정만으로는 이 빌드나 사이트 재배포가 필요하지 않습니다. 구체적인 프로젝트·입장 구성은 [Cloudflare 구성](CLOUDFLARE_SETUP.md)과 [이메일 입력 입장](CLOUDFLARE_PRIVATE_SETUP.md)에 있습니다.
+
+## 가상 DEMO만 빌드할 때
+
+~~~powershell
+.\.venv\Scripts\python.exe scripts/build_public.py --mode demo
+~~~
+
+산출물은 **`.tools/public-deploy/dist/`**입니다. DEMO JSON과 필요한 화면 파일만 골라 빌드하므로 로컬 실제 뉴스·상태 파일이 섞이지 않습니다.
+
+일반 `npm run build`는 기본 `public/` 안의 파일을 포함할 수 있습니다. 실제 뉴스 파일이 있는 작업 폴더에서는 배포 목적에 맞는 위 빌드 도구를 사용합니다.
+
+## 소스 전달
+
+~~~powershell
+.\.venv\Scripts\python.exe scripts/package_project.py
+~~~
+
+프로젝트 상위 폴더에 `today-issue-delivery.zip`을 만듭니다. 현재 개인용 데이터 구성에서 아래 자료를 제외합니다.
+
+- `.env`와 실제 API 키
+- 실제 뉴스 `latest.json`·`status.json`과 비공개 빌드
+- 원자료·캐시·진단·실제 뉴스 캡처
+- 로컬 실행 도구와 설치된 의존성
+
+현재 데이터 보존 기준과 호출 차단 범위는 [고정 운영](FROZEN_EDITION.md), 검사는 [검증 안내](VALIDATION.md)를 따릅니다.

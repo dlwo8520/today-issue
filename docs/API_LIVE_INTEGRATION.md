@@ -1,6 +1,7 @@
-> **2026-10-15 운영 변경:** 현재는 저장된 에디션을 고정 표시하며 GPT·뉴스 API와 갱신을 중지했습니다. 아래 API 실행·예약 자동화 안내는 이전 구현 기록이며 현재 workflow에서는 동작하지 않습니다. [현재 운영 상태](FROZEN_EDITION.md)
+> **개발·조사 이력 — 2026-10-13~14 API 구현**
+> 아래 내용은 각 항목의 작성 당시 기록입니다. 현재는 2026-10-15 11:21 KST 고정본을 유지하며 GPT·뉴스 API와 갱신을 중지했습니다. 실행 절차는 [시작하기](GETTING_STARTED.md), 운영 상태는 [고정 운영](FROZEN_EDITION.md)을 따릅니다.
 
-# 최근 2주 API 수집·선정·Live 실행
+# API 파이프라인 구현 이력
 
 현재 기준은 실행 시각 직전 336시간, 복수 출처 사건, 최신 기사 발행 순, 검증 통과 최대 6개입니다. 실제 GNews·NewsData·OpenAI 연결과 로컬 Live 검증을 완료했습니다. [전체 개발 정리](PHASE_1_REPORT.md), [화면 수정](UI_REVISION.md)
 
@@ -38,9 +39,9 @@ OpenAI Responses API Structured Outputs의 근거 추출 → 요약 → 별도 �
 
 홈과 상세는 첫 번째 원문의 API 사진 URL을 표시합니다. 누락된 경우 그 원문 head의 og:image/twitter:image를 최대 512KiB·최대 3리다이렉트·공개 주소 검증으로 보완합니다. 기사 HTML 전문은 저장하거나 요약에 쓰지 않으며 사진 파일을 복사하지 않습니다. 로드 실패 시 사진 영역을 숨깁니다.
 
-## 기본 상한
+## 중지 전 설정 상한
 
-| 설정 | 현재 값 |
+| 설정 | 중지 전 설정값 |
 |---|---:|
 | 수집·그룹화 | 336시간 |
 | GNews 날짜 구간 / 추가 페이지 구간 | 14 / 6 |
@@ -54,7 +55,7 @@ OpenAI Responses API Structured Outputs의 근거 추출 → 요약 → 별도 �
 
 실패도 요청 시도 예산에 포함하고 캐시 hit는 새 요청으로 세지 않습니다. 제공된 응답 토큰과 기록된 모델 요율로 비용을 추정하며 청구서와 구분합니다. 뉴스 구독비·세금·환율은 미포함입니다.
 
-## 실행
+## 중지 전 실행 명령
 
 ~~~powershell
 .\.venv\Scripts\python.exe -m pipeline.run --mode live --dry-run

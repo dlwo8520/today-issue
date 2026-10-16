@@ -1,53 +1,46 @@
-> **2026-10-15 운영 변경:** 현재는 저장된 에디션을 고정 표시하며 GPT·뉴스 API와 갱신을 중지했습니다. 아래 API 실행·예약 자동화 안내는 이전 구현 기록이며 현재 workflow에서는 동작하지 않습니다. [현재 운영 상태](FROZEN_EDITION.md)
+# 이메일 입력으로 고정 에디션 보기
 
-# 오늘의 잇슈 — 사진과 이메일 입력 입장
+문서 점검일: **2026-10-16 KST**
 
-기준일: 2026-10-15 KST
+**[기본 사이트 주소](https://today-issue-dlwo8520.pages.dev)**에서 지정된 이메일을 입력하면 저장된 실제 뉴스 6개와 첫 원문 사진을 볼 수 있습니다.
 
-**접속 주소: [오늘의 잇슈](https://today-issue-dlwo8520.pages.dev)**
+## 기본 주소의 입장 방식
 
-실제 이슈 6개와 첫 원문 사진 6개를 제공합니다. 지정 이메일 입력만으로 입장하며 메일 인증번호·비밀번호를 요구하지 않습니다. 이는 본인 인증이 아니므로 같은 이메일을 아는 다른 사람도 입장할 수 있습니다.
-
-## 현재 동작
-
-- 서버에서 이메일을 비교합니다. 허용 이메일과 서명 키는 브라우저 코드에 넣지 않습니다.
-- 입장 후 Secure·HttpOnly·SameSite 쿠키를 사용하며 유효 기간은 30일입니다.
-- 입력 전에는 홈·뉴스 JSON·상태 JSON·JS/CSS 자산을 제공하지 않습니다. 잘못된 이메일은 거부합니다.
-- 서명 키 설정이 없거나 잘못되면 파일을 제공하지 않습니다.
-- 기본 주소의 Access OTP 앱을 제거하고 Pages Worker가 전체 요청을 처리합니다.
-- Worker가 없는 이전 Live 배포를 보호하기 위해 wildcard Access 앱을 유지합니다. 개별 배포 주소는 기존 OTP가 적용되므로 위 기본 주소를 사용합니다.
-
-## 실제 데이터와 검증
-
-2026-10-15 새 수집과 이력을 함께 분석하여 673건 → 분석 667건 → 628그룹 → 적격 후보 29개 → 검증 통과 6개를 생성했습니다. 에디션 갱신 시각은 11:21 KST입니다. 최근 2주·최신 기사 발행 순·최대 6개 설정을 유지했습니다. [글 가독성 개선](READABILITY_UPDATE.md)도 함께 반영했습니다.
-
-현재 배포 ID는 `6b31594e-d865-47e9-9021-28dab35cd42c`입니다. 실제 결과 JSON과 사진 URL은 소스 저장소에 넣지 않습니다. 수집과 JSON의 범위는 `local_private`를 유지하며 이 메타데이터를 본인 인증의 보장으로 해석하지 않습니다.
-
-Python 112개·이메일 입장 서버 8개·실제 주소 Live 브라우저 1개가 통과했습니다. 실제 서버에서 지정 이메일 입장·다른 이메일 거부·입력 전 JSON 차단·위조 쿠키 차단과 원격 데이터 일치를 확인했습니다. 브라우저에서는 이메일 입력부터 PC·모바일 뉴스·사진·상세 URL·목록 이동·접근성까지 확인했습니다.
-
-구현은 `server/email-gate.mjs`, 개인용 빌드는 `scripts/build_private.py`입니다. 산출물 `.tools/private-deploy/dist`에는 `_worker.js`와 모든 경로를 포함하는 `_routes.json`이 반드시 있어야 합니다. [Worker 전체 요청 처리](https://developers.cloudflare.com/pages/functions/advanced-mode/), [Functions 경로 설정](https://developers.cloudflare.com/pages/functions/routing/).
-
-## GitHub 자동 갱신
-
-현재 Secrets는 미등록이므로 실제 일일 갱신은 활성화하지 않았습니다. [GitHub Actions Secrets](https://github.com/dlwo8520/today-issue/settings/secrets/actions)에 다음 5개 값을 등록합니다.
-
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
-- `GNEWS_API_KEY`
-- `NEWSDATA_API_KEY`
-- `OPENAI_API_KEY`
-
-[Actions Variables](https://github.com/dlwo8520/today-issue/settings/variables/actions)에 다음을 설정합니다.
-
-| Variable | 값 |
+| 항목 | 동작 |
 |---|---|
-| CLOUDFLARE_ACCESS_EMAIL | 실제 입장에 사용하는 이메일 |
-| NEWS_MODE | private |
-| OPENAI_MODEL | gpt-5.4-mini 또는 선택한 모델 |
-| ENABLE_CLOUDFLARE | 수동 private 배포 확인 후 true |
+| 이메일 | 서버에 설정된 지정 이메일과 비교 |
+| 메일 인증번호 | 사용하지 않음 |
+| 비밀번호 | 사용하지 않음 |
+| 입장 유지 | 서명 쿠키, 유효 기간 30일 |
+| 입력 전 요청 | 화면·JSON·자산을 입장 페이지로 이동 |
+| 다른 이메일 | 거부 |
 
-Cloudflare production에는 PERSONAL_EMAIL과 secret binding PERSONAL_SESSION_SECRET을 이미 설정했습니다. 같은 프로젝트에 계속 배포하면 기존 서버 설정을 사용합니다. 토큰은 Pages Edit 및 이전 배포 Access 설정 조회 권한을 유지해야 합니다. 서명 키·API 키를 소스에 적지 않습니다.
+이메일 일치 확인은 본인 인증이 아닙니다. 같은 이메일을 아는 다른 사람도 입장할 수 있습니다.
 
-처음에는 **Cloudflare edition → Run workflow → mode private**로 확인합니다. 이후 KST 오전 7시 예약이 활성화됩니다. 예약 실행은 지연될 수 있습니다. 실패 시 유효한 이전 private 에디션을 복원하며 공개 news-state와 개인용 private-news-state를 섞지 않습니다.
+## 서버에서 처리하는 것
 
-개인용 빌드는 `python scripts/build_private.py`입니다. Worker가 없는 과거 Live로 기본 주소를 rollback하면 입장 제한이 빠질 수 있으므로 해당 배포로 되돌리지 않습니다. 공개판 운영 절차는 [기존 배포 안내](CLOUDFLARE_SETUP.md)에 보존했습니다.
+`server/email-gate.mjs`가 이메일 비교와 쿠키 서명을 수행합니다. 허용 이메일과 서명 키는 서버 설정에서 읽고 브라우저 코드에 넣지 않습니다.
+
+쿠키는 `Secure`·`HttpOnly`·`SameSite=Lax` 속성을 사용합니다. 서명이 잘못되거나 만료되면 입장 페이지로 이동하며, 서버 설정이 부족하면 파일을 제공하지 않습니다.
+
+입장 처리는 GPT·뉴스 API를 호출하지 않습니다. 화면은 저장된 고정 JSON만 읽습니다.
+
+## 기본 주소와 이전 배포 주소
+
+| 주소 종류 | 입장 방식 |
+|---|---|
+| `today-issue-dlwo8520.pages.dev` | 이메일 입력만 사용 |
+| `배포ID.today-issue-dlwo8520.pages.dev` 형태의 이전 주소 | 기존 Cloudflare Access 보호 유지 |
+
+이전 배포에는 현재 입장 서버가 없는 버전도 있으므로 별도 보호를 유지합니다. **실제 확인에는 기본 주소를 사용하세요.**
+
+## 화면 수정·배포
+
+개인용 빌드는 기존 뉴스 파일과 Cloudflare 설정을 검사하고 `_worker.js`·`_routes.json`을 포함해 출력합니다.
+
+- 빌드 도구: `scripts/build_private.py`
+- 출력: `.tools/private-deploy/dist/`
+- 실제 데이터: `public/data/latest.json`의 기존 고정본
+- GitHub workflow: 검사만 실행, 자동 배포 없음
+
+API 키나 GitHub Secrets를 추가해 일일 갱신을 설정할 필요는 없습니다. [배포 절차](DEPLOYMENT.md)와 [고정 운영 기준](FROZEN_EDITION.md)을 확인하세요.
